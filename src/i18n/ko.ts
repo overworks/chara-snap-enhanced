@@ -26,9 +26,14 @@ export const ko: Dict = {
     dropTitle: "여기에 캐릭터 카드를 놓으세요",
     dropReading: "카드를 읽는 중…",
     dropFormats: "PNG, JSON, 또는 CHARX",
+    urlLabel: "…또는 캐릭터 카드 URL로 가져오기",
+    urlPlaceholder: "Chub, CharacterHub, RisuRealm 링크 또는 직접 .png / .json / .charx URL",
+    urlImport: "가져오기",
     exampleHeading: "예제로 시작하기",
     errorRead: "파일을 읽을 수 없습니다.",
     errorExample: "{name} 예제를 불러올 수 없습니다.",
+    errorUrl:
+      "그 URL에서 가져오지 못했습니다. 사이트가 브라우저 직접 접근(CORS)을 막았거나 캐릭터 카드가 아닐 수 있습니다.",
     featuresHeading: "AI 캐릭터 카드 에디터",
     featuresSub:
       "캐릭터 카드를 만들고, 편집하고, 내보내는 데 필요한 모든 것 — 전부 브라우저 안에서.",

@@ -10,7 +10,7 @@ import {
   writeCardChunks,
 } from "./png";
 import { emptyCard, fromParsed, toV2Envelope, toV3Envelope } from "./card";
-import { readCardFromPng } from "./io";
+import { readCardFromPng, readCardBytes, resolveCardUrl } from "./io";
 import { zipSync, strToU8 } from "fflate";
 import { writeCharx, readCharx } from "./charx";
 import {
@@ -256,6 +256,47 @@ describe("asset helpers", () => {
     const decoded = parseDataUrl(bytesToDataUrl(bytes, "image/png"));
     expect(decoded?.bytes).toEqual(bytes);
     expect(decoded?.ext).toBe("png");
+  });
+});
+
+describe("URL import resolution", () => {
+  it("rewrites a chub.ai character page to the charhub avatars CDN", () => {
+    const r = resolveCardUrl("https://chub.ai/characters/slaykyh/character-card-builder");
+    expect(r.url).toBe(
+      "https://avatars.charhub.io/avatars/slaykyh/character-card-builder/chara_card_v2.png",
+    );
+    expect(r.fileName).toBe("character-card-builder.png");
+  });
+
+  it("handles www + characterhub.org and ignores query/hash", () => {
+    expect(
+      resolveCardUrl("https://www.characterhub.org/characters/a/b?x=1#frag").url,
+    ).toBe("https://avatars.charhub.io/avatars/a/b/chara_card_v2.png");
+  });
+
+  it("rewrites a RisuRealm character page to the cors download endpoint", () => {
+    const id = "0ddd20b0-6400-4d02-8bf0-1da2745c858e";
+    const r = resolveCardUrl(`https://realm.risuai.net/character/${id}`);
+    expect(r.url).toBe(
+      `https://realm.risuai.net/api/v1/download/dynamic/${id}?cors=true`,
+    );
+  });
+
+  it("passes a direct file URL through with its basename", () => {
+    const r = resolveCardUrl("https://example.com/path/rem.charx");
+    expect(r.url).toBe("https://example.com/path/rem.charx");
+    expect(r.fileName).toBe("rem.charx");
+  });
+});
+
+describe("readCardBytes detection", () => {
+  it("parses a JSON card by extension", () => {
+    const bytes = new TextEncoder().encode(
+      JSON.stringify(toV2Envelope({ ...emptyCard(), name: "FromJson" })),
+    );
+    const state = readCardBytes(bytes, "x.json", "application/json");
+    expect(state.card.name).toBe("FromJson");
+    expect(state.detectedVersion).toBe("v2");
   });
 });
 

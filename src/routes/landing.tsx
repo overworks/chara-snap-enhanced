@@ -12,7 +12,7 @@ import {
   Github,
 } from "lucide-react";
 import { useCard } from "../state/CardContext";
-import { readCardFile, loadExampleCard } from "../lib/io";
+import { readCardFile, readCardFromUrl, loadExampleCard } from "../lib/io";
 import { useI18n } from "../i18n";
 import { REPO_URL } from "../links";
 import HeaderControls from "../components/HeaderControls";
@@ -45,6 +45,7 @@ export default function LandingPage() {
   const [dragging, setDragging] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [url, setUrl] = useState("");
 
   async function handleFile(file: File) {
     setError(null);
@@ -55,6 +56,23 @@ export default function LandingPage() {
       navigate({ to: "/editor" });
     } catch (e) {
       setError(e instanceof Error ? e.message : d.landing.errorRead);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleUrl() {
+    const value = url.trim();
+    if (!value) return;
+    setError(null);
+    setLoading(true);
+    try {
+      const state = await readCardFromUrl(value);
+      setState(state);
+      navigate({ to: "/editor" });
+    } catch (e) {
+      console.error(e);
+      setError(d.landing.errorUrl);
     } finally {
       setLoading(false);
     }
@@ -145,6 +163,30 @@ export default function LandingPage() {
           />
         </div>
         {error && <p className="mt-3 text-sm text-error">{error}</p>}
+
+        {/* Import by URL */}
+        <div className="mt-5">
+          <p className="text-sm text-fg-faint">{d.landing.urlLabel}</p>
+          <div className="mx-auto mt-2 flex max-w-xl gap-2">
+            <input
+              type="url"
+              className="input flex-1"
+              value={url}
+              placeholder={d.landing.urlPlaceholder}
+              onChange={(e) => setUrl(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleUrl();
+              }}
+            />
+            <button
+              onClick={handleUrl}
+              disabled={loading || !url.trim()}
+              className="btn-secondary shrink-0"
+            >
+              {d.landing.urlImport}
+            </button>
+          </div>
+        </div>
 
         <div className="mt-5">
           <button onClick={createNew} className="btn-secondary">

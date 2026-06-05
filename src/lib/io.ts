@@ -76,44 +76,149 @@ export function readCardFromPng(bytes: Uint8Array): {
 /** Read a card from any supported file, returning a full CardState. */
 export async function readCardFile(file: File): Promise<CardState> {
   const buf = new Uint8Array(await file.arrayBuffer());
-  const lower = file.name.toLowerCase();
+  return readCardBytes(buf, file.name, file.type);
+}
 
-  if (lower.endsWith(".json") || file.type === "application/json") {
-    const text = new TextDecoder().decode(buf);
-    const { card, detectedVersion } = fromParsed(JSON.parse(text));
-    return {
-      card,
-      originalPngBytes: null,
-      avatarUrl: null,
-      detectedVersion,
-      fileName: file.name,
-      assets: {},
-    };
-  }
+/** Build a CardState from raw card bytes, detecting PNG / CHARX / JSON. */
+export function readCardBytes(
+  bytes: Uint8Array,
+  fileName: string,
+  contentType = "",
+): CardState {
+  const lower = fileName.toLowerCase();
+  const isPng =
+    bytes[0] === 0x89 && bytes[1] === 0x50 && bytes[2] === 0x4e && bytes[3] === 0x47;
+  const isZip = bytes[0] === 0x50 && bytes[1] === 0x4b; // "PK"
 
-  if (lower.endsWith(".charx")) {
-    const { card, assets, detectedVersion } = readCharx(buf);
+  // CHARX (zip) — by extension or magic bytes.
+  if (lower.endsWith(".charx") || (isZip && !lower.endsWith(".json"))) {
+    const { card, assets, detectedVersion } = readCharx(bytes);
     const avatar = resolveCharxAvatar(card, assets);
     return {
       card,
       originalPngBytes: avatar?.png ?? null,
       avatarUrl: avatar?.url ?? null,
       detectedVersion,
-      fileName: file.name,
+      fileName,
       assets,
     };
   }
 
-  // Default: PNG.
-  const { card, detectedVersion } = readCardFromPng(buf);
+  // PNG — by magic bytes or extension.
+  if (isPng || lower.endsWith(".png")) {
+    const { card, detectedVersion } = readCardFromPng(bytes);
+    return {
+      card,
+      originalPngBytes: bytes,
+      avatarUrl: pngObjectUrl(bytes),
+      detectedVersion,
+      fileName,
+      assets: {},
+    };
+  }
+
+  // JSON — extension, content-type, or fallback for anything else.
+  const text = new TextDecoder().decode(bytes);
+  const parsed: unknown = JSON.parse(text);
+  // RisuRealm's JSON form wraps the card as { card, img }; unwrap it.
+  const raw =
+    parsed &&
+    typeof parsed === "object" &&
+    "card" in parsed &&
+    !("spec" in parsed) &&
+    !("data" in parsed) &&
+    !("name" in parsed)
+      ? (parsed as { card: unknown }).card
+      : parsed;
+  const { card, detectedVersion } = fromParsed(raw);
   return {
     card,
-    originalPngBytes: buf,
-    avatarUrl: pngObjectUrl(buf),
+    originalPngBytes: null,
+    avatarUrl: null,
     detectedVersion,
-    fileName: file.name,
+    fileName,
     assets: {},
   };
+}
+
+export interface ResolvedCardUrl {
+  url: string;
+  fileName: string;
+}
+
+/**
+ * Resolve a user-pasted URL to a directly-fetchable card URL. Chub.ai /
+ * CharacterHub character pages are rewritten to the CORS-open charhub avatars
+ * CDN, which serves the full V2 card PNG. Any other URL is used as-is (works
+ * when the host allows cross-origin reads, e.g. raw GitHub or a direct file).
+ */
+export function resolveCardUrl(raw: string): ResolvedCardUrl {
+  const input = raw.trim();
+  const m = input.match(
+    /^https?:\/\/(?:www\.)?(?:chub\.ai|characterhub\.org)\/characters\/([^/?#]+)\/([^/?#]+)/i,
+  );
+  if (m) {
+    const author = decodeURIComponent(m[1]);
+    const name = decodeURIComponent(m[2]);
+    return {
+      url: `https://avatars.charhub.io/avatars/${author}/${name}/chara_card_v2.png`,
+      fileName: `${name}.png`,
+    };
+  }
+  // RisuRealm character page → its CORS-enabled dynamic download endpoint.
+  const realm = input.match(
+    /^https?:\/\/realm\.risuai\.net\/character\/([0-9a-fA-F-]+)/,
+  );
+  if (realm) {
+    const id = realm[1];
+    return {
+      url: `https://realm.risuai.net/api/v1/download/dynamic/${id}?cors=true`,
+      fileName: id, // extension is added from the response content-type
+    };
+  }
+  let fileName = "character";
+  try {
+    const base = new URL(input).pathname.split("/").filter(Boolean).pop();
+    if (base) fileName = decodeURIComponent(base);
+  } catch {
+    /* not a parseable URL — the fetch below will surface the error */
+  }
+  return { url: input, fileName };
+}
+
+/**
+ * Fetch + parse a card from a public URL — a Chub/CharacterHub character page or
+ * a direct .png/.json/.charx link. Browser-direct (no proxy, no backend); only
+ * works for hosts that permit cross-origin reads.
+ */
+export async function readCardFromUrl(raw: string): Promise<CardState> {
+  const { url, fileName } = resolveCardUrl(raw);
+  let res: Response;
+  try {
+    res = await fetch(url, { headers: { Accept: "*/*" } });
+  } catch {
+    throw new Error(
+      "Network or CORS error — the site may not allow direct browser access.",
+    );
+  }
+  if (!res.ok) throw new Error(`The card URL returned HTTP ${res.status}.`);
+  const bytes = new Uint8Array(await res.arrayBuffer());
+  const contentType = res.headers.get("content-type") ?? "";
+  // Give extension-less names (e.g. a RisuRealm id) a sensible suffix.
+  let name = fileName;
+  if (!/\.(png|json|charx)$/i.test(name)) {
+    const ext = extFromContentType(contentType);
+    if (ext) name = `${name}.${ext}`;
+  }
+  return readCardBytes(bytes, name, contentType);
+}
+
+function extFromContentType(ct: string): string | null {
+  const t = ct.toLowerCase();
+  if (t.includes("png")) return "png";
+  if (t.includes("charx") || t.includes("zip")) return "charx";
+  if (t.includes("json")) return "json";
+  return null;
 }
 
 /**

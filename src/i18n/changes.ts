@@ -71,6 +71,14 @@ export const changesEn: ChangesContent = {
   log: [
     {
       date: "2026-06-06",
+      title: "Import cards by URL",
+      items: [
+        "Paste a Chub.ai, CharacterHub, or RisuRealm character link — or a direct `.png` / `.json` / `.charx` URL — on the home page to import without downloading a file first.",
+        "Browser-direct, with no proxy or backend: Chub links resolve through the CORS-open charhub avatars CDN, RisuRealm through its `?cors=true` download endpoint, and nothing about your cards leaves your device.",
+      ],
+    },
+    {
+      date: "2026-06-06",
       title: "Initial reconstruction",
       items: [
         "Rebuilt the original feature set as a static, client-only app: PNG / JSON / CHARX import and export, a seven-tab editor, lorebook, live validation, and token estimates.",
@@ -126,6 +134,14 @@ export const changesKo: ChangesContent = {
   logTitle: "변경 노트",
   logIntro: "최신순입니다. 새 기능이 만들어질 때마다 여기에 기록됩니다.",
   log: [
+    {
+      date: "2026-06-06",
+      title: "URL로 카드 가져오기",
+      items: [
+        "홈 화면에 Chub.ai, CharacterHub, RisuRealm 캐릭터 링크 — 또는 직접 `.png` / `.json` / `.charx` URL — 을 붙여넣으면 파일을 먼저 내려받지 않고 바로 가져옵니다.",
+        "프록시·백엔드 없는 브라우저 직접 방식: Chub 링크는 CORS를 허용하는 charhub avatars CDN으로, RisuRealm은 `?cors=true` 다운로드 엔드포인트로 해석되며, 카드 정보는 기기를 떠나지 않습니다.",
+      ],
+    },
     {
       date: "2026-06-06",
       title: "최초 재구성",

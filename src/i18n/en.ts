@@ -26,9 +26,14 @@ export const en = {
     dropTitle: "Drop a character card here",
     dropReading: "Reading card…",
     dropFormats: "PNG, JSON, or CHARX",
+    urlLabel: "…or import from a character-card URL",
+    urlPlaceholder: "Chub, CharacterHub, RisuRealm, or a direct .png / .json / .charx URL",
+    urlImport: "Import",
     exampleHeading: "Start from an example",
     errorRead: "Could not read that file.",
     errorExample: "Could not load the {name} example.",
+    errorUrl:
+      "Couldn't import from that URL. The site may block direct browser access (CORS), or it isn't a character card.",
     featuresHeading: "The AI Character Card Editor",
     featuresSub:
       "Everything you need to build, edit, and export character cards — all in your browser.",
