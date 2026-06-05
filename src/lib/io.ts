@@ -20,7 +20,7 @@ import {
   encodeBase64Json,
   writeCardChunks,
 } from "./png";
-import { readCharx, writeCharx } from "./charx";
+import { readCharx, writeCharx, looksLikeCharx } from "./charx";
 import {
   isEmbededUri,
   embededPath,
@@ -90,8 +90,8 @@ export function readCardBytes(
     bytes[0] === 0x89 && bytes[1] === 0x50 && bytes[2] === 0x4e && bytes[3] === 0x47;
   const isZip = bytes[0] === 0x50 && bytes[1] === 0x4b; // "PK"
 
-  // CHARX (zip) — by extension or magic bytes.
-  if (lower.endsWith(".charx") || (isZip && !lower.endsWith(".json"))) {
+  // CHARX (zip) — by extension or zip magic bytes.
+  const readAsCharx = (): CardState => {
     const { card, assets, detectedVersion } = readCharx(bytes);
     const avatar = resolveCharxAvatar(card, assets);
     return {
@@ -102,9 +102,12 @@ export function readCardBytes(
       fileName,
       assets,
     };
+  };
+  if (lower.endsWith(".charx") || (isZip && !lower.endsWith(".json"))) {
+    return readAsCharx();
   }
 
-  // PNG — by magic bytes or extension.
+  // PNG — by magic bytes or extension (a real character PNG, not a polyglot).
   if (isPng || lower.endsWith(".png")) {
     const { card, detectedVersion } = readCardFromPng(bytes);
     return {
@@ -115,6 +118,13 @@ export function readCardBytes(
       fileName,
       assets: {},
     };
+  }
+
+  // Image-wrapped CHARX polyglot — RisuAI exports CharX embedded inside a JPEG
+  // (named .jpg/.jpeg, or extension-less from a download endpoint). Detect the
+  // appended ZIP by content, after the plain-PNG path has had its chance.
+  if (!lower.endsWith(".json") && looksLikeCharx(bytes)) {
+    return readAsCharx();
   }
 
   // JSON — extension, content-type, or fallback for anything else.

@@ -238,6 +238,58 @@ describe("CHARX lenient reading (non-conformant files)", () => {
     expect(main?.name).toBe("main");
     expect(assets[embededPath(main!.uri)]).toEqual(bytes);
   });
+
+  // RisuAI's "CharX embedded JPEG": a real image with the ZIP appended after
+  // it. fflate's central-directory offsets assume the ZIP starts at byte 0, so
+  // the leading image bytes must be skipped first.
+  const JPEG_PREFIX = new Uint8Array([
+    0xff, 0xd8, 0xff, 0xe0, 0x00, 0x10, 0x4a, 0x46, 0x49, 0x46, 0x00, 0x01, 0xff, 0xd9,
+  ]);
+  const withImagePrefix = (zip: Uint8Array, prefix = JPEG_PREFIX) => {
+    const out = new Uint8Array(prefix.length + zip.length);
+    out.set(prefix, 0);
+    out.set(zip, prefix.length);
+    return out;
+  };
+
+  it("reads a CHARX with an appended-to-image (JPEG) prefix", () => {
+    const bytes = new Uint8Array([5, 5, 5]);
+    const zip = makeCharx(
+      v3({
+        name: "Wrapped",
+        assets: [
+          { type: "icon", uri: "embeded://assets/icon/image/main.png", name: "main", ext: "png" },
+        ],
+      }),
+      { "assets/icon/image/main.png": bytes },
+    );
+    const { card, assets, detectedVersion } = readCharx(withImagePrefix(zip));
+    expect(card.name).toBe("Wrapped");
+    expect(detectedVersion).toBe("v3");
+    expect(assets[embededPath(card.assets![0].uri)]).toEqual(bytes);
+  });
+
+  it("still reads a plain (non-prefixed) CHARX", () => {
+    const zip = makeCharx(v3({ name: "Plain" }), {});
+    expect(readCharx(zip).card.name).toBe("Plain");
+  });
+
+  it("routes an image-prefixed polyglot named .jpeg to CHARX", () => {
+    const zip = makeCharx(v3({ name: "JpegCard" }), {});
+    const state = readCardBytes(withImagePrefix(zip), "card.jpeg");
+    expect(state.card.name).toBe("JpegCard");
+    expect(state.detectedVersion).toBe("v3");
+  });
+
+  it("routes an extension-less image-prefixed polyglot to CHARX", () => {
+    const zip = makeCharx(v3({ name: "Bare" }), {});
+    expect(readCardBytes(withImagePrefix(zip), "download").card.name).toBe("Bare");
+  });
+
+  it("does not mistake a plain image for a CHARX", () => {
+    // A JPEG with no appended ZIP must not be read as a card.
+    expect(() => readCardBytes(JPEG_PREFIX, "photo.jpeg")).toThrow();
+  });
 });
 
 describe("asset helpers", () => {

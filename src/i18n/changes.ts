@@ -71,6 +71,14 @@ export const changesEn: ChangesContent = {
   log: [
     {
       date: "2026-06-06",
+      title: "Read image-wrapped CHARX files",
+      items: [
+        "Import RisuAI's \"CharX embedded JPEG\" exports — a real image with the `.charx` ZIP appended after it — by detecting the archive past the leading image bytes.",
+        "Such polyglots are now recognized even when named `.jpg` / `.jpeg` or served without an extension.",
+      ],
+    },
+    {
+      date: "2026-06-06",
       title: "Import cards by URL",
       items: [
         "Paste a Chub.ai, CharacterHub, or RisuRealm character link — or a direct `.png` / `.json` / `.charx` URL — on the home page to import without downloading a file first.",
@@ -134,6 +142,14 @@ export const changesKo: ChangesContent = {
   logTitle: "변경 노트",
   logIntro: "최신순입니다. 새 기능이 만들어질 때마다 여기에 기록됩니다.",
   log: [
+    {
+      date: "2026-06-06",
+      title: "이미지로 감싼 CHARX 읽기",
+      items: [
+        "RisuAI의 \"CharX embedded JPEG\" 내보내기 — 실제 이미지 뒤에 `.charx` ZIP을 붙인 파일 — 를 앞쪽 이미지 바이트를 건너뛰고 아카이브를 찾아 가져옵니다.",
+        "이런 폴리글랏 파일은 `.jpg` / `.jpeg` 이름이거나 확장자 없이 제공되어도 인식합니다.",
+      ],
+    },
     {
       date: "2026-06-06",
       title: "URL로 카드 가져오기",

@@ -28,7 +28,7 @@ export interface CharxResult {
 
 /** Parse a .charx (zip) buffer into a card + raw asset files (lenient). */
 export function readCharx(bytes: Uint8Array): CharxResult {
-  const files = unzipSync(bytes);
+  const files = unzipSync(locateZip(bytes));
   // Prefer a root card.json, but accept one nested anywhere (case-insensitive).
   const keys = Object.keys(files);
   const cardKey =
@@ -53,6 +53,82 @@ export function readCharx(bytes: Uint8Array): CharxResult {
 
 function stripBom(s: string): string {
   return s.charCodeAt(0) === 0xfeff ? s.slice(1) : s;
+}
+
+// --- ZIP locating (for embedded-in-image polyglots) ----------------------
+//
+// RisuAI can export a "CharX embedded JPEG": a real JPEG image with the CHARX
+// ZIP appended after it (so the file previews as an image yet carries the card
+// data). fflate's unzipSync reads the central directory and trusts its stored
+// offsets, which assume the ZIP starts at byte 0 — so it chokes on the leading
+// image bytes. RisuAI sidesteps this with fflate's *streaming* Unzip, which
+// scans forward for local-file-header signatures. We get the same result by
+// detecting the prefix and handing fflate a view that starts at the real ZIP.
+
+const LFH = [0x50, 0x4b, 0x03, 0x04]; // "PK\x03\x04" local file header
+const EOCD = [0x50, 0x4b, 0x05, 0x06]; // "PK\x05\x06" end of central directory
+
+function matchSig(bytes: Uint8Array, at: number, sig: number[]): boolean {
+  return (
+    bytes[at] === sig[0] &&
+    bytes[at + 1] === sig[1] &&
+    bytes[at + 2] === sig[2] &&
+    bytes[at + 3] === sig[3]
+  );
+}
+
+/**
+ * Return a view of `bytes` that begins at the real ZIP, skipping any leading
+ * bytes (e.g. an embedded JPEG/PNG preview). Unchanged when it already starts
+ * with a local file header or no ZIP prefix is detected.
+ */
+function locateZip(bytes: Uint8Array): Uint8Array {
+  if (matchSig(bytes, 0, LFH)) return bytes; // already a plain ZIP
+  const prefix = zipPrefixLength(bytes);
+  return prefix > 0 ? bytes.subarray(prefix) : bytes;
+}
+
+/**
+ * Bytes preceding the real ZIP, or 0 when not a prefixed archive. Derived from
+ * the End-of-Central-Directory record: the gap between where the central
+ * directory actually sits and the offset the EOCD claims for it is the prefix.
+ * Falls back to the first local-file-header signature if that math doesn't land
+ * on one (e.g. ZIP64, where the 32-bit offset is saturated).
+ */
+function zipPrefixLength(bytes: Uint8Array): number {
+  const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+  // The EOCD lives within the last 22 + 65535 (max comment) bytes; scan back.
+  const min = Math.max(0, bytes.length - (22 + 0xffff));
+  for (let i = bytes.length - 22; i >= min; i--) {
+    if (!matchSig(bytes, i, EOCD)) continue;
+    const cdSize = view.getUint32(i + 12, true);
+    const cdOffset = view.getUint32(i + 16, true);
+    const prefix = i - cdSize - cdOffset;
+    if (prefix > 0 && prefix < bytes.length && matchSig(bytes, prefix, LFH)) {
+      return prefix;
+    }
+    break; // found the EOCD but the math didn't land — try the LFH fallback
+  }
+  // Fallback: first local file header anywhere in the file.
+  return indexOfSig(bytes, LFH);
+}
+
+function indexOfSig(bytes: Uint8Array, sig: number[]): number {
+  const last = bytes.length - 4;
+  for (let i = 0; i <= last; i++) {
+    if (matchSig(bytes, i, sig)) return i;
+  }
+  return 0;
+}
+
+/**
+ * Does this buffer look like a CHARX/ZIP archive — either a plain ZIP or an
+ * image-prefixed polyglot? Used to route files whose name/magic isn't a clear
+ * `.charx` (e.g. RisuAI's `.jpeg`-wrapped exports).
+ */
+export function looksLikeCharx(bytes: Uint8Array): boolean {
+  if (matchSig(bytes, 0, LFH)) return true; // "PK\x03\x04"
+  return zipPrefixLength(bytes) > 0;
 }
 
 /**
