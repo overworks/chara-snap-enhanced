@@ -1,0 +1,118 @@
+@import "tailwindcss";
+
+/* ── Design tokens reconstructed from charasnap.com ─────────────────── */
+@theme {
+  --color-accent: #6d5cff;
+  --color-accent-hover: #7e70ff;
+  --color-accent-subtle: #6d5cff1a;
+  --color-accent-border: #6d5cff40;
+
+  --color-surface-base: #111114;
+  --color-surface-border: #ffffff0f;
+  --color-surface-border-strong: #ffffff1a;
+
+  --color-success: #34d399;
+  --color-error: #f87171;
+  --color-info: #60a5fa;
+  --color-warning: #f99c00;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+
+  --font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+}
+
+:root {
+  --header-h: 48px;
+  --mobile-header-h: 48px;
+  --mobile-footer-h: 56px;
+  --mobile-tabbar-h: 44px;
+  --drawer-width-left: 17rem;
+  --drawer-width-right: 22rem;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+}
+
+/* Thin custom scrollbars to match the dark UI */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #ffffff1a transparent;
+}
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-thumb {
+  background: #ffffff1a;
+  border-radius: 9999px;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: #ffffff33;
+}
+
+/* ── Shared component utilities ─────────────────────────────────────── */
+@layer components {
+  .field-label {
+    @apply block text-xs font-medium text-zinc-400 mb-1.5;
+  }
+  .field-hint {
+    @apply mt-1.5 text-xs text-zinc-500 leading-relaxed;
+  }
+  .input {
+    @apply w-full rounded-[10px] bg-zinc-900/60 border border-[#ffffff0f]
+      px-3 py-2 text-sm text-zinc-100 placeholder:text-zinc-600
+      outline-none transition
+      focus:border-[#6d5cff] focus:ring-2 focus:ring-[#6d5cff40];
+  }
+  .textarea {
+    @apply w-full rounded-[10px] bg-zinc-900/60 border border-[#ffffff0f]
+      px-3 py-2 text-sm text-zinc-100 placeholder:text-zinc-600
+      outline-none transition resize-y leading-relaxed
+      focus:border-[#6d5cff] focus:ring-2 focus:ring-[#6d5cff40];
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-[10px]
+      px-3.5 py-2 text-sm font-medium transition select-none
+      disabled:opacity-50 disabled:pointer-events-none;
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-[10px]
+      px-3.5 py-2 text-sm font-medium transition select-none
+      disabled:opacity-50 disabled:pointer-events-none
+      bg-[#6d5cff] text-white hover:bg-[#7e70ff]
+      shadow-[0_4px_14px_-4px_#6d5cffaa];
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-[10px]
+      px-3.5 py-2 text-sm font-medium transition select-none
+      disabled:opacity-50 disabled:pointer-events-none
+      bg-zinc-800/80 text-zinc-200 border border-[#ffffff0f]
+      hover:bg-zinc-700/80;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-[10px]
+      px-3.5 py-2 text-sm font-medium transition select-none
+      disabled:opacity-50 disabled:pointer-events-none
+      text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/60;
+  }
+  .card-surface {
+    @apply rounded-[14px] bg-surface-base border border-[#ffffff0f];
+  }
+  .chip {
+    @apply inline-flex items-center gap-1 rounded-full bg-zinc-800
+      px-2.5 py-1 text-xs text-zinc-300;
+  }
+}
