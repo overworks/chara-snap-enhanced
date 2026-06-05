@@ -43,6 +43,7 @@ export const en = {
       "I wanted to add features to charasnap.com, but it ships no public source and its author could not be reached. This is an independent, clean-room reconstruction built out of necessity so that work could continue.",
     originTakedown:
       "It is not affiliated with or endorsed by the original. If the original author objects, this project and its site will be taken down immediately on request.",
+    originLink: "See what's different from the original →",
     features: [
       {
         title: "Edit V2 & V3 Character Cards",

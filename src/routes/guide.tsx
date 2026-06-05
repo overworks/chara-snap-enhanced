@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import HeaderControls from "../components/HeaderControls";
+import { Rich } from "../components/Rich";
 import { useI18n } from "../i18n";
 import { guideEn, guideKo } from "../i18n/guide";
 
@@ -13,35 +14,6 @@ const SECTION_IDS = [
   "writing-tips",
   "exporting-and-sharing",
 ] as const;
-
-/** Render lightweight inline markup: `code` → <code>, **bold** → <strong>. */
-function Rich({ text }: { text: string }) {
-  const parts = text.split(/(`[^`]+`|\*\*[^*]+\*\*)/g);
-  return (
-    <>
-      {parts.map((p, i) => {
-        if (p.startsWith("`") && p.endsWith("`")) {
-          return (
-            <code
-              key={i}
-              className="rounded bg-elevated px-1.5 py-0.5 text-xs text-fg-muted"
-            >
-              {p.slice(1, -1)}
-            </code>
-          );
-        }
-        if (p.startsWith("**") && p.endsWith("**")) {
-          return (
-            <strong key={i} className="font-semibold text-fg">
-              {p.slice(2, -2)}
-            </strong>
-          );
-        }
-        return p;
-      })}
-    </>
-  );
-}
 
 function H({ id, children }: { id: string; children: React.ReactNode }) {
   return (

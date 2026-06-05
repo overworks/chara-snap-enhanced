@@ -247,6 +247,14 @@ export default function LandingPage() {
               <p className="text-sm leading-relaxed text-fg-muted">
                 {d.landing.originTakedown}
               </p>
+              <p>
+                <Link
+                  to="/changes"
+                  className="text-sm font-medium text-accent-text hover:underline"
+                >
+                  {d.landing.originLink}
+                </Link>
+              </p>
             </div>
           </div>
 

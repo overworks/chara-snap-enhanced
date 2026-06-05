@@ -10,6 +10,7 @@ import { I18nProvider } from "./i18n";
 import LandingPage from "./routes/landing";
 import EditorPage from "./routes/editor";
 import GuidePage from "./routes/guide";
+import ChangesPage from "./routes/changes";
 
 // Vite base is "/chara-snap-enhanced/"; the router basepath is the same
 // without the trailing slash. Override via VITE_BASE for custom domains.
@@ -46,10 +47,17 @@ const guideRoute = createRoute({
   component: GuidePage,
 });
 
+const changesRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/changes",
+  component: ChangesPage,
+});
+
 const routeTree = rootRoute.addChildren([
   landingRoute,
   editorRoute,
   guideRoute,
+  changesRoute,
 ]);
 
 export const router = createRouter({
