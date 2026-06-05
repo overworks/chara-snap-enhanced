@@ -24,6 +24,8 @@ export interface LorebookEntry {
   secondary_keys: string[];
   constant: boolean;
   position: "before_char" | "after_char";
+  /** V3: treat keys as regular expressions when matching. */
+  use_regex: boolean;
 }
 
 export interface Lorebook {
@@ -36,10 +38,12 @@ export interface Lorebook {
   extensions: Record<string, unknown>;
 }
 
+/** Preset asset types. V3 also allows custom `x_`-prefixed types, so `CardAsset.type` is a free string. */
 export type AssetType = "icon" | "background" | "emotion" | "user_icon" | "other";
 
 export interface CardAsset {
-  type: AssetType;
+  /** A known AssetType value or a custom (e.g. `x_live2d`) type. */
+  type: string;
   uri: string;
   name: string;
   ext: string;
@@ -81,6 +85,8 @@ export interface CardState {
   avatarUrl: string | null;
   detectedVersion: CardVersion | null;
   fileName: string | null;
+  /** Embedded CHARX asset bytes, keyed by zip-internal path (the `embeded://` target). */
+  assets: Record<string, Uint8Array>;
 }
 
 export type ExportFormat =

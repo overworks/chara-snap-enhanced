@@ -6,7 +6,6 @@ import type {
   Lorebook,
   LorebookEntry,
   DepthPrompt,
-  AssetType,
 } from "./types";
 
 export const V2_SPEC = "chara_card_v2";
@@ -49,6 +48,7 @@ export function emptyEntry(index = 0): LorebookEntry {
     secondary_keys: [],
     constant: false,
     position: "before_char",
+    use_regex: false,
   };
 }
 
@@ -95,6 +95,7 @@ function normalizeEntry(raw: unknown, index: number): LorebookEntry {
     secondary_keys: asStringArray(e.secondary_keys),
     constant: e.constant === true,
     position: e.position === "after_char" ? "after_char" : "before_char",
+    use_regex: e.use_regex === true,
   };
 }
 
@@ -149,13 +150,14 @@ export function normalizeCard(raw: unknown): CharacterCard {
       d.creator_notes_multilingual,
     );
   if (Array.isArray(d.assets)) {
-    const types = ["icon", "background", "emotion", "user_icon", "other"];
+    // Preserve the asset type verbatim — V3 permits custom `x_*` types, and the
+    // spec's implied default for a bare asset is icon/main/ccdefault:/png.
     card.assets = (d.assets as unknown[]).map((a) => {
       const o = asObject(a);
       return {
-        type: (types.includes(o.type as string) ? o.type : "other") as AssetType,
-        uri: asString(o.uri),
-        name: asString(o.name),
+        type: asString(o.type, "icon") || "icon",
+        uri: asString(o.uri, "ccdefault:"),
+        name: asString(o.name, "main"),
         ext: asString(o.ext, "png"),
       };
     });

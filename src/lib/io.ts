@@ -2,6 +2,7 @@
 
 import type {
   CharacterCard,
+  CardAsset,
   CardState,
   CardVersion,
   ExportFormat,
@@ -20,6 +21,15 @@ import {
   writeCardChunks,
 } from "./png";
 import { readCharx, writeCharx } from "./charx";
+import {
+  isEmbededUri,
+  embededPath,
+  extToMime,
+  extOf,
+  findMainIcon,
+  isPreviewableImage,
+  normalizeExt,
+} from "./assets";
 
 export const EXPORT_OPTIONS: ExportOption[] = [
   {
@@ -77,17 +87,20 @@ export async function readCardFile(file: File): Promise<CardState> {
       avatarUrl: null,
       detectedVersion,
       fileName: file.name,
+      assets: {},
     };
   }
 
   if (lower.endsWith(".charx")) {
-    const { card } = readCharx(buf);
+    const { card, assets, detectedVersion } = readCharx(buf);
+    const avatar = resolveCharxAvatar(card, assets);
     return {
       card,
-      originalPngBytes: null,
-      avatarUrl: null,
-      detectedVersion: "v3",
+      originalPngBytes: avatar?.png ?? null,
+      avatarUrl: avatar?.url ?? null,
+      detectedVersion,
       fileName: file.name,
+      assets,
     };
   }
 
@@ -99,7 +112,43 @@ export async function readCardFile(file: File): Promise<CardState> {
     avatarUrl: pngObjectUrl(buf),
     detectedVersion,
     fileName: file.name,
+    assets: {},
   };
+}
+
+/**
+ * Resolve the avatar for a CHARX card. Prefers the embedded icon/main asset,
+ * then any embedded image asset, then the first image file in the archive — so
+ * cards that mislabel or omit their main icon still get a preview.
+ */
+function resolveCharxAvatar(
+  card: CharacterCard,
+  assets: Record<string, Uint8Array>,
+): { png: Uint8Array | null; url: string } | null {
+  const fromBytes = (bytes: Uint8Array, ext: string) => ({
+    // Only reuse as the PNG export base when it's actually a PNG.
+    png: normalizeExt(ext) === "png" ? bytes : null,
+    url: URL.createObjectURL(bytesToBlob(bytes, extToMime(ext))),
+  });
+  const fromAsset = (a: CardAsset) => {
+    if (!isEmbededUri(a.uri) || !isPreviewableImage(a.ext)) return null;
+    const bytes = assets[embededPath(a.uri)];
+    return bytes ? fromBytes(bytes, a.ext || "png") : null;
+  };
+
+  const main = findMainIcon(card.assets);
+  if (main) {
+    const r = fromAsset(main);
+    if (r) return r;
+  }
+  for (const a of card.assets ?? []) {
+    const r = fromAsset(a);
+    if (r) return r;
+  }
+  for (const [path, bytes] of Object.entries(assets)) {
+    if (isPreviewableImage(extOf(path))) return fromBytes(bytes, extOf(path) || "png");
+  }
+  return null;
 }
 
 /** Wrap raw bytes in a Blob (casts around TS's strict typed-array generics). */
@@ -126,6 +175,7 @@ export async function loadExampleCard(
     avatarUrl: pngObjectUrl(buf),
     detectedVersion,
     fileName,
+    assets: {},
   };
 }
 
@@ -165,7 +215,7 @@ export function exportCard(
   }
 
   if (format === "charx") {
-    const bytes = writeCharx(card, now);
+    const bytes = writeCharx(card, now, state.assets, state.originalPngBytes);
     return {
       blob: bytesToBlob(bytes, "application/octet-stream"),
       filename: `${base}.charx`,
@@ -206,5 +256,6 @@ export function newCardState(): CardState {
     avatarUrl: null,
     detectedVersion: null,
     fileName: null,
+    assets: {},
   };
 }

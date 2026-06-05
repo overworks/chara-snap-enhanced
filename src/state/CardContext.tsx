@@ -19,6 +19,8 @@ interface CardContextValue {
   mutateCard: (fn: (card: CharacterCard) => CharacterCard) => void;
   /** Set/clear the avatar image. */
   setAvatar: (pngBytes: Uint8Array | null, url: string | null) => void;
+  /** Store or remove embedded CHARX asset bytes by zip path (pass null to delete). */
+  setAssetBytes: (path: string, bytes: Uint8Array | null) => void;
   /** Reset to a blank card. */
   reset: () => void;
 }
@@ -48,11 +50,31 @@ export function CardProvider({ children }: { children: ReactNode }) {
     [],
   );
 
+  const setAssetBytes = useCallback(
+    (path: string, bytes: Uint8Array | null) => {
+      setStateRaw((s) => {
+        const next = { ...s.assets };
+        if (bytes) next[path] = bytes;
+        else delete next[path];
+        return { ...s, assets: next };
+      });
+    },
+    [],
+  );
+
   const reset = useCallback(() => setStateRaw(newCardState()), []);
 
   const value = useMemo(
-    () => ({ state, setState, updateCard, mutateCard, setAvatar, reset }),
-    [state, setState, updateCard, mutateCard, setAvatar, reset],
+    () => ({
+      state,
+      setState,
+      updateCard,
+      mutateCard,
+      setAvatar,
+      setAssetBytes,
+      reset,
+    }),
+    [state, setState, updateCard, mutateCard, setAvatar, setAssetBytes, reset],
   );
 
   return <CardContext.Provider value={value}>{children}</CardContext.Provider>;
