@@ -1,9 +1,11 @@
 import { Plus, X } from "lucide-react";
 import { useCard } from "../../../state/CardContext";
+import { useI18n } from "../../../i18n";
 import { TextInput, TextArea, Field } from "../../fields";
 
 export default function IdentityTab() {
   const { state, updateCard, mutateCard } = useCard();
+  const { d } = useI18n();
   const { card } = state;
 
   const notes = card.creator_notes_multilingual ?? {};
@@ -38,83 +40,80 @@ export default function IdentityTab() {
     <div className="space-y-5">
       <div className="grid gap-4 sm:grid-cols-2">
         <TextInput
-          label="Name"
-          tooltip="The character's display name."
+          label={d.identity.name}
+          tooltip={d.identity.nameTip}
           value={card.name}
           onChange={(v) => updateCard({ name: v })}
-          placeholder="Character name"
+          placeholder={d.identity.namePlaceholder}
         />
         <TextInput
-          label="Nickname"
-          tooltip="An optional display-name override (V3)."
+          label={d.identity.nickname}
+          tooltip={d.identity.nicknameTip}
           value={card.nickname ?? ""}
           onChange={(v) => updateCard({ nickname: v })}
-          placeholder="Display name override…"
+          placeholder={d.identity.nicknamePlaceholder}
         />
       </div>
 
       <TextArea
-        label="Description"
-        tooltip="The core definition of the character — the main block the AI roleplays from."
-        hint="Who is this character? Personality, appearance, backstory."
+        label={d.identity.description}
+        tooltip={d.identity.descriptionTip}
+        hint={d.identity.descriptionHint}
         value={card.description}
         onChange={(v) => updateCard({ description: v })}
-        placeholder="A detailed description of the character…"
+        placeholder={d.identity.descriptionPlaceholder}
         rows={8}
       />
 
       <TextArea
-        label="Personality"
-        tooltip="A short personality summary; some clients inject this separately."
-        hint="Short personality summary (some clients use this separately)."
+        label={d.identity.personality}
+        tooltip={d.identity.personalityTip}
+        hint={d.identity.personalityHint}
         value={card.personality}
         onChange={(v) => updateCard({ personality: v })}
-        placeholder="Personality traits…"
+        placeholder={d.identity.personalityPlaceholder}
         rows={3}
       />
 
       <TextArea
-        label="Scenario"
-        tooltip="The current situation or context for the conversation."
-        hint="The current situation or context for the conversation."
+        label={d.identity.scenario}
+        tooltip={d.identity.scenarioTip}
+        hint={d.identity.scenarioHint}
         value={card.scenario}
         onChange={(v) => updateCard({ scenario: v })}
-        placeholder="Describe the scenario…"
+        placeholder={d.identity.scenarioPlaceholder}
         rows={3}
       />
 
       <div className="card-surface space-y-4 p-4">
         <TextArea
-          label="Creator Notes"
-          tooltip="Metadata shown to users importing the card — not sent to the AI."
-          hint="Metadata visible to users importing this card — not sent to AI."
+          label={d.identity.creatorNotes}
+          tooltip={d.identity.creatorNotesTip}
+          hint={d.identity.creatorNotesHint}
           value={card.creator_notes}
           onChange={(v) => updateCard({ creator_notes: v })}
-          placeholder="Usage tips, recommended settings…"
+          placeholder={d.identity.creatorNotesPlaceholder}
           rows={3}
         />
 
-        <Field
-          label="Multilingual Notes"
-          tooltip="Creator notes in additional languages (V3)."
-        >
+        <Field label={d.identity.multilingual} tooltip={d.identity.multilingualTip}>
           <div className="space-y-2">
             {noteEntries.length === 0 && (
-              <p className="text-xs text-zinc-600">No multilingual notes.</p>
+              <p className="text-xs text-fg-subtle">{d.identity.multilingualEmpty}</p>
             )}
             {noteEntries.map(([lang, text], i) => (
               <div key={i} className="flex gap-2">
                 <input
                   className="input w-20 shrink-0"
                   value={lang}
-                  placeholder="en"
+                  placeholder={d.identity.multilingualLangPlaceholder}
                   onChange={(e) => setNote(lang, e.target.value, text)}
                 />
                 <textarea
                   className="textarea flex-1"
                   rows={2}
                   value={text}
-                  placeholder="Translated notes…"
+                  placeholder={d.identity.multilingualTextPlaceholder}
                   onChange={(e) => setNote(lang, lang, e.target.value)}
                 />
                 <button
@@ -128,7 +127,7 @@ export default function IdentityTab() {
               </div>
             ))}
             <button type="button" onClick={addNote} className="btn-secondary text-xs">
-              <Plus size={14} /> Add
+              <Plus size={14} /> {d.common.add}
             </button>
           </div>
         </Field>

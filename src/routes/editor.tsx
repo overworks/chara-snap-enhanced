@@ -13,6 +13,8 @@ import {
   User,
 } from "lucide-react";
 import { useCard } from "../state/CardContext";
+import { useI18n } from "../i18n";
+import HeaderControls from "../components/HeaderControls";
 import ProfilePanel from "../components/editor/ProfilePanel";
 import ExportModal from "../components/editor/ExportModal";
 import IdentityTab from "../components/editor/tabs/IdentityTab";
@@ -35,6 +37,7 @@ const TABS = [
 
 export default function EditorPage() {
   const { state } = useCard();
+  const { d } = useI18n();
   const [active, setActive] = useState<(typeof TABS)[number]["id"]>("identity");
   const [exportOpen, setExportOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
@@ -44,22 +47,23 @@ export default function EditorPage() {
   return (
     <div className="flex h-full flex-col">
       {/* Header */}
-      <header className="flex h-12 shrink-0 items-center gap-3 border-b border-[#ffffff0f] px-4">
+      <header className="flex h-12 shrink-0 items-center gap-3 border-b border-border px-4">
         <Link to="/" className="btn-ghost px-2" aria-label="Home">
           <Home size={18} />
         </Link>
-        <span className="min-w-0 flex-1 truncate text-sm font-medium text-zinc-200">
-          {state.card.name || "Untitled character"}
+        <span className="min-w-0 flex-1 truncate text-sm font-medium text-fg">
+          {state.card.name || d.editor.untitled}
         </span>
+        <HeaderControls className="hidden md:flex" />
         <button
           onClick={() => setProfileOpen((v) => !v)}
           className="btn-ghost px-2 lg:hidden"
-          aria-label="Profile"
+          aria-label={d.editor.profile}
         >
           <User size={18} />
         </button>
         <button onClick={() => setExportOpen(true)} className="btn-primary text-sm">
-          <Download size={15} /> Export
+          <Download size={15} /> {d.common.export}
         </button>
       </header>
 
@@ -67,7 +71,7 @@ export default function EditorPage() {
         {/* Main column */}
         <main className="flex min-w-0 flex-1 flex-col">
           {/* Tab bar */}
-          <nav className="flex shrink-0 gap-1 overflow-x-auto border-b border-[#ffffff0f] px-3">
+          <nav className="flex shrink-0 gap-1 overflow-x-auto border-b border-border px-3">
             {TABS.map((t) => {
               const on = t.id === active;
               return (
@@ -76,12 +80,12 @@ export default function EditorPage() {
                   onClick={() => setActive(t.id)}
                   className={`flex shrink-0 items-center gap-1.5 border-b-2 px-3 py-2.5 text-sm transition ${
                     on
-                      ? "border-[#6d5cff] text-zinc-100"
-                      : "border-transparent text-zinc-500 hover:text-zinc-300"
+                      ? "border-accent text-fg"
+                      : "border-transparent text-fg-faint hover:text-fg-muted"
                   }`}
                 >
                   <t.icon size={15} />
-                  {t.label}
+                  {d.editor.tabs[t.id]}
                 </button>
               );
             })}
@@ -95,7 +99,7 @@ export default function EditorPage() {
         </main>
 
         {/* Right sidebar (desktop) */}
-        <aside className="hidden w-[22rem] shrink-0 overflow-y-auto border-l border-[#ffffff0f] px-4 py-5 lg:block">
+        <aside className="hidden w-[22rem] shrink-0 overflow-y-auto border-l border-border px-4 py-5 lg:block">
           <ProfilePanel />
         </aside>
       </div>
@@ -107,9 +111,10 @@ export default function EditorPage() {
           onClick={() => setProfileOpen(false)}
         >
           <div
-            className="absolute right-0 top-0 h-full w-[20rem] max-w-[85vw] overflow-y-auto border-l border-[#ffffff1a] bg-zinc-950 px-4 py-5"
+            className="absolute right-0 top-0 h-full w-[20rem] max-w-[85vw] overflow-y-auto border-l border-border-strong bg-bg px-4 py-5"
             onClick={(e) => e.stopPropagation()}
           >
+            <HeaderControls className="mb-4 justify-end" />
             <ProfilePanel />
           </div>
         </div>

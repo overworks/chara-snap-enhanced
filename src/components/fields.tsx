@@ -24,14 +24,14 @@ export function InfoLabel({
             type="button"
             aria-label={`About ${label}`}
             onClick={() => setOpen((v) => !v)}
-            className="text-zinc-600 hover:text-zinc-300 transition"
+            className="text-fg-subtle hover:text-fg-muted transition"
           >
             <HelpCircle size={13} />
           </button>
           {open && (
             <span
               role="tooltip"
-              className="absolute left-1/2 top-5 z-30 w-64 -translate-x-1/2 rounded-[10px] border border-[#ffffff1a] bg-zinc-900 px-3 py-2 text-[11px] font-normal leading-relaxed text-zinc-300 shadow-xl"
+              className="absolute left-1/2 top-5 z-30 w-64 -translate-x-1/2 rounded-[10px] border border-border-strong bg-surface px-3 py-2 text-[11px] font-normal leading-relaxed text-fg-muted shadow-xl"
             >
               {hint}
             </span>
@@ -140,10 +140,10 @@ export function Checkbox({
   onChange: (v: boolean) => void;
 }) {
   return (
-    <label className="flex items-center gap-2 text-sm text-zinc-300 cursor-pointer select-none">
+    <label className="flex items-center gap-2 text-sm text-fg-muted cursor-pointer select-none">
       <input
         type="checkbox"
-        className="size-4 rounded border-zinc-600 bg-zinc-800 accent-[#6d5cff]"
+        className="size-4 rounded border-border-strong bg-elevated accent-accent"
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
       />
@@ -161,11 +161,11 @@ function InfoLabelInline({ hint, label }: { hint: string; label: string }) {
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
     >
-      <HelpCircle size={13} className="text-zinc-600" aria-label={`About ${label}`} />
+      <HelpCircle size={13} className="text-fg-subtle" aria-label={`About ${label}`} />
       {open && (
         <span
           role="tooltip"
-          className="absolute left-1/2 top-5 z-30 w-64 -translate-x-1/2 rounded-[10px] border border-[#ffffff1a] bg-zinc-900 px-3 py-2 text-[11px] leading-relaxed text-zinc-300 shadow-xl"
+          className="absolute left-1/2 top-5 z-30 w-64 -translate-x-1/2 rounded-[10px] border border-border-strong bg-surface px-3 py-2 text-[11px] leading-relaxed text-fg-muted shadow-xl"
         >
           {hint}
         </span>

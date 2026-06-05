@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import HeaderControls from "../components/HeaderControls";
 
 const TOC = [
   ["what-is-a-character-card", "1. What is a Character Card?"],
@@ -49,7 +50,7 @@ const TIPS: [string, string][] = [
 
 function H({ id, children }: { id: string; children: React.ReactNode }) {
   return (
-    <h2 id={id} className="scroll-mt-20 text-2xl font-bold text-zinc-100">
+    <h2 id={id} className="scroll-mt-20 text-2xl font-bold text-fg">
       {children}
     </h2>
   );
@@ -58,22 +59,25 @@ function H({ id, children }: { id: string; children: React.ReactNode }) {
 export default function GuidePage() {
   return (
     <div className="min-h-full">
-      <header className="sticky top-0 z-20 border-b border-[#ffffff0f] bg-zinc-950/80 backdrop-blur">
+      <header className="sticky top-0 z-20 border-b border-border bg-bg/80 backdrop-blur">
         <div className="mx-auto flex max-w-3xl items-center justify-between px-5 py-3">
-          <Link to="/" className="text-sm text-zinc-400 hover:text-zinc-100">
+          <Link to="/" className="text-sm text-fg-muted hover:text-fg">
             ← Back to Chara Snap
           </Link>
-          <Link to="/editor" className="btn-secondary">
-            Open Editor
-          </Link>
+          <div className="flex items-center gap-2">
+            <HeaderControls className="hidden sm:flex" />
+            <Link to="/editor" className="btn-secondary">
+              Open Editor
+            </Link>
+          </div>
         </div>
       </header>
 
-      <article className="mx-auto max-w-3xl px-5 py-10 leading-relaxed text-zinc-300">
-        <h1 className="text-3xl font-bold text-zinc-100">
+      <article className="mx-auto max-w-3xl px-5 py-10 leading-relaxed text-fg-muted">
+        <h1 className="text-3xl font-bold text-fg">
           How to Create &amp; Edit SillyTavern Character Cards
         </h1>
-        <p className="mt-3 text-zinc-400">
+        <p className="mt-3 text-fg-muted">
           A comprehensive reference for creating AI character cards — from your first card
           to advanced lorebook setups.
         </p>
@@ -82,7 +86,7 @@ export default function GuidePage() {
           <ul className="space-y-1.5 text-sm">
             {TOC.map(([id, label]) => (
               <li key={id}>
-                <a href={`#${id}`} className="text-[#7e70ff] hover:underline">
+                <a href={`#${id}`} className="text-accent-text hover:underline">
                   {label}
                 </a>
               </li>
@@ -108,7 +112,7 @@ export default function GuidePage() {
 
         <section className="mt-12 space-y-4">
           <H id="getting-started">2. Getting Started with Chara Snap</H>
-          <h3 className="font-semibold text-zinc-100">Editing an existing card</h3>
+          <h3 className="font-semibold text-fg">Editing an existing card</h3>
           <ol className="list-decimal space-y-1 pl-5">
             <li>Drag a PNG (or JSON/CHARX) card onto the drop zone on the home page.</li>
             <li>The editor opens with every field populated from the card.</li>
@@ -117,7 +121,7 @@ export default function GuidePage() {
               Click <strong>Export</strong> to download the updated card.
             </li>
           </ol>
-          <h3 className="font-semibold text-zinc-100">Creating a new card from scratch</h3>
+          <h3 className="font-semibold text-fg">Creating a new card from scratch</h3>
           <ol className="list-decimal space-y-1 pl-5">
             <li>
               Click <strong>Create New</strong> on the home page.
@@ -133,7 +137,7 @@ export default function GuidePage() {
             </li>
             <li>Upload an avatar image, then export.</li>
           </ol>
-          <h3 className="font-semibold text-zinc-100">Try an example</h3>
+          <h3 className="font-semibold text-fg">Try an example</h3>
           <p>
             Not sure where to begin? Load one of the bundled examples — Megumin, Rem, or
             Sherlock Holmes — to see how a complete card is structured.
@@ -145,13 +149,13 @@ export default function GuidePage() {
           <div className="space-y-4">
             {FIELDS.map(([name, code, body]) => (
               <div key={code}>
-                <h3 className="font-semibold text-zinc-100">
+                <h3 className="font-semibold text-fg">
                   {name}{" "}
-                  <code className="rounded bg-zinc-800 px-1.5 py-0.5 text-xs text-zinc-400">
+                  <code className="rounded bg-elevated px-1.5 py-0.5 text-xs text-fg-muted">
                     {code}
                   </code>
                 </h3>
-                <p className="mt-1 text-sm text-zinc-400">{body}</p>
+                <p className="mt-1 text-sm text-fg-muted">{body}</p>
               </div>
             ))}
           </div>
@@ -165,19 +169,19 @@ export default function GuidePage() {
             appear in the conversation. Instead of cramming every world detail into the
             description, you put it in entries that only activate when relevant.
           </p>
-          <h3 className="font-semibold text-zinc-100">How lorebook entries work</h3>
-          <p className="text-sm text-zinc-400">
+          <h3 className="font-semibold text-fg">How lorebook entries work</h3>
+          <p className="text-sm text-fg-muted">
             Each entry has <strong>keywords</strong> and <strong>content</strong>. When one
             of the keywords appears in recent chat history, the content gets injected into
             the prompt. For example, an entry with keywords "Blackwood Forest, the forest"
             would automatically appear when the conversation mentions those terms.
           </p>
-          <h3 className="font-semibold text-zinc-100">Key lorebook fields</h3>
+          <h3 className="font-semibold text-fg">Key lorebook fields</h3>
           <div className="space-y-3">
             {LOREBOOK_FIELDS.map(([name, body]) => (
               <div key={name}>
-                <h4 className="text-sm font-medium text-zinc-200">{name}</h4>
-                <p className="text-sm text-zinc-400">{body}</p>
+                <h4 className="text-sm font-medium text-fg">{name}</h4>
+                <p className="text-sm text-fg-muted">{body}</p>
               </div>
             ))}
           </div>
@@ -185,16 +189,16 @@ export default function GuidePage() {
 
         <section className="mt-12 space-y-4">
           <H id="v2-vs-v3">5. V2 vs V3 (CHARX) Format</H>
-          <div className="overflow-hidden rounded-[12px] border border-[#ffffff0f]">
+          <div className="overflow-hidden rounded-[12px] border border-border">
             <table className="w-full text-sm">
-              <thead className="bg-zinc-900/60 text-left text-zinc-300">
+              <thead className="bg-surface/60 text-left text-fg-muted">
                 <tr>
                   <th className="px-4 py-2 font-medium">Aspect</th>
                   <th className="px-4 py-2 font-medium">V2</th>
                   <th className="px-4 py-2 font-medium">V3 (CHARX)</th>
                 </tr>
               </thead>
-              <tbody className="text-zinc-400">
+              <tbody className="text-fg-muted">
                 {[
                   ["Container", "PNG tEXt chunk", "ZIP archive (.charx)"],
                   ["Assets", "Avatar only", "Multiple embedded assets"],
@@ -203,7 +207,7 @@ export default function GuidePage() {
                   ["Multilingual notes", "—", "Yes"],
                   ["App compatibility", "Very broad", "Growing"],
                 ].map((row) => (
-                  <tr key={row[0]} className="border-t border-[#ffffff0f]">
+                  <tr key={row[0]} className="border-t border-border">
                     {row.map((cell, i) => (
                       <td key={i} className="px-4 py-2">
                         {cell}
@@ -214,7 +218,7 @@ export default function GuidePage() {
               </tbody>
             </table>
           </div>
-          <p className="text-sm text-zinc-400">
+          <p className="text-sm text-fg-muted">
             <strong>Use V2</strong> for maximum compatibility — if you're sharing on Chub.ai
             or CharacterHub and want it to work everywhere, V2 PNG is the safe choice.{" "}
             <strong>Use V3</strong> if you need multiple assets or V3-specific fields, and
@@ -228,8 +232,8 @@ export default function GuidePage() {
           <div className="space-y-3">
             {TIPS.map(([name, body]) => (
               <div key={name}>
-                <h3 className="font-semibold text-zinc-100">{name}</h3>
-                <p className="text-sm text-zinc-400">{body}</p>
+                <h3 className="font-semibold text-fg">{name}</h3>
+                <p className="text-sm text-fg-muted">{body}</p>
               </div>
             ))}
           </div>
@@ -237,21 +241,21 @@ export default function GuidePage() {
 
         <section className="mt-12 space-y-4">
           <H id="exporting-and-sharing">7. Exporting and Sharing Your Cards</H>
-          <h3 className="font-semibold text-zinc-100">Export as PNG</h3>
-          <p className="text-sm text-zinc-400">
+          <h3 className="font-semibold text-fg">Export as PNG</h3>
+          <p className="text-sm text-fg-muted">
             The standard export. Chara Snap bakes your character data into the PNG as a
             V2-format <code>tEXt</code> chunk. The result is both a viewable image and a
             complete character definition — what you upload to hosting sites and import into
             chat apps.
           </p>
-          <h3 className="font-semibold text-zinc-100">Export as JSON or CHARX</h3>
-          <p className="text-sm text-zinc-400">
+          <h3 className="font-semibold text-fg">Export as JSON or CHARX</h3>
+          <p className="text-sm text-fg-muted">
             JSON exports just the character metadata without an image — useful for backups,
             diffing versions, or tools that accept raw JSON. CHARX bundles the V3 card plus
             any assets into a single ZIP archive.
           </p>
-          <h3 className="font-semibold text-zinc-100">Where to share</h3>
-          <ul className="list-disc space-y-1 pl-5 text-sm text-zinc-400">
+          <h3 className="font-semibold text-fg">Where to share</h3>
+          <ul className="list-disc space-y-1 pl-5 text-sm text-fg-muted">
             <li>
               <strong>Chub.ai</strong> — the largest character card hosting platform.
             </li>
@@ -269,8 +273,8 @@ export default function GuidePage() {
           </ul>
         </section>
 
-        <div className="mt-14 flex items-center justify-between border-t border-[#ffffff0f] pt-6">
-          <Link to="/" className="text-sm text-zinc-400 hover:text-zinc-100">
+        <div className="mt-14 flex items-center justify-between border-t border-border pt-6">
+          <Link to="/" className="text-sm text-fg-muted hover:text-fg">
             ← Back to home
           </Link>
           <Link to="/editor" className="btn-primary">

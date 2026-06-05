@@ -3,10 +3,12 @@ import { ImagePlus, X } from "lucide-react";
 import { useCard } from "../../state/CardContext";
 import { imageFileToPng } from "../../lib/image";
 import { pngObjectUrl } from "../../lib/io";
+import { useI18n } from "../../i18n";
 import { TextInput } from "../fields";
 
 export default function ProfilePanel() {
   const { state, updateCard, setAvatar } = useCard();
+  const { d } = useI18n();
   const { card } = state;
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -36,7 +38,7 @@ export default function ProfilePanel() {
       <button
         type="button"
         onClick={() => fileRef.current?.click()}
-        className="group relative block w-full overflow-hidden rounded-[14px] border border-[#ffffff0f] bg-zinc-900/40"
+        className="group relative block w-full overflow-hidden rounded-[14px] border border-border bg-surface/40"
       >
         <div className="aspect-[2/3] w-full">
           {state.avatarUrl ? (
@@ -46,15 +48,15 @@ export default function ProfilePanel() {
               className="h-full w-full object-cover"
             />
           ) : (
-            <div className="flex h-full w-full flex-col items-center justify-center gap-2 text-zinc-600">
+            <div className="flex h-full w-full flex-col items-center justify-center gap-2 text-fg-subtle">
               <ImagePlus size={28} />
-              <span className="text-xs">Add avatar</span>
+              <span className="text-xs">{d.profile.addAvatar}</span>
             </div>
           )}
         </div>
         {state.avatarUrl && (
-          <span className="absolute inset-x-0 bottom-0 bg-black/60 py-1.5 text-center text-xs text-zinc-200 opacity-0 transition group-hover:opacity-100">
-            Change avatar
+          <span className="absolute inset-x-0 bottom-0 bg-black/60 py-1.5 text-center text-xs text-white opacity-0 transition group-hover:opacity-100">
+            {d.profile.changeAvatar}
           </span>
         )}
       </button>
@@ -71,27 +73,27 @@ export default function ProfilePanel() {
       />
 
       <TextInput
-        label="Name"
-        tooltip="The character's display name, used for the {{char}} placeholder."
+        label={d.profile.name}
+        tooltip={d.profile.nameTip}
         value={card.name}
         onChange={(v) => updateCard({ name: v })}
-        placeholder="Character name"
+        placeholder={d.profile.namePlaceholder}
       />
       <TextInput
-        label="Creator"
-        tooltip="Your name or handle, shown in card listings."
+        label={d.profile.creator}
+        tooltip={d.profile.creatorTip}
         value={card.creator}
         onChange={(v) => updateCard({ creator: v })}
-        placeholder="Your name"
+        placeholder={d.profile.creatorPlaceholder}
       />
 
       <div>
         <TextInput
-          label="Tags"
-          tooltip="Comma-separated tags used by hosting sites for search and filtering."
+          label={d.profile.tags}
+          tooltip={d.profile.tagsTip}
           value={tags.join(", ")}
           onChange={setTags}
-          placeholder="tag1, tag2, tag3"
+          placeholder={d.profile.tagsPlaceholder}
         />
         {tags.length > 0 && (
           <div className="mt-2 flex flex-wrap gap-1.5">
@@ -103,7 +105,7 @@ export default function ProfilePanel() {
                   onClick={() =>
                     updateCard({ tags: tags.filter((_, idx) => idx !== i) })
                   }
-                  className="text-zinc-500 hover:text-zinc-200"
+                  className="text-fg-faint hover:text-fg"
                 >
                   <X size={11} />
                 </button>
@@ -114,21 +116,21 @@ export default function ProfilePanel() {
       </div>
 
       <TextInput
-        label="Character Version"
-        tooltip="A version string for tracking revisions, e.g. 1.0."
+        label={d.profile.version}
+        tooltip={d.profile.versionTip}
         value={card.character_version}
         onChange={(v) => updateCard({ character_version: v })}
-        placeholder="1.0"
+        placeholder={d.profile.versionPlaceholder}
       />
 
       {state.detectedVersion && (
-        <div className="rounded-[10px] border border-[#ffffff0f] bg-zinc-900/40 px-3 py-2 text-xs text-zinc-500">
-          Imported as{" "}
-          <span className="font-medium uppercase text-[#7e70ff]">
+        <div className="rounded-[10px] border border-border bg-surface/40 px-3 py-2 text-xs text-fg-faint">
+          {d.profile.importedAs}{" "}
+          <span className="font-medium uppercase text-accent-text">
             {state.detectedVersion}
           </span>
           {state.fileName && (
-            <span className="block truncate text-zinc-600">{state.fileName}</span>
+            <span className="block truncate text-fg-subtle">{state.fileName}</span>
           )}
         </div>
       )}

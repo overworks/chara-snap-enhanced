@@ -5,6 +5,8 @@ import {
   Outlet,
 } from "@tanstack/react-router";
 import { CardProvider } from "./state/CardContext";
+import { ThemeProvider } from "./theme/ThemeContext";
+import { I18nProvider } from "./i18n";
 import LandingPage from "./routes/landing";
 import EditorPage from "./routes/editor";
 import GuidePage from "./routes/guide";
@@ -16,9 +18,13 @@ const basepath = rawBase === "/" ? undefined : rawBase.replace(/\/$/, "");
 
 const rootRoute = createRootRoute({
   component: () => (
-    <CardProvider>
-      <Outlet />
-    </CardProvider>
+    <ThemeProvider>
+      <I18nProvider>
+        <CardProvider>
+          <Outlet />
+        </CardProvider>
+      </I18nProvider>
+    </ThemeProvider>
   ),
 });
 

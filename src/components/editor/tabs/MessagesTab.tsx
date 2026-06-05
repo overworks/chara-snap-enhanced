@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { Plus, X, ChevronDown, ChevronUp, GripVertical } from "lucide-react";
 import { useCard } from "../../../state/CardContext";
+import { useI18n } from "../../../i18n";
 import { TextArea, Field, InfoLabel } from "../../fields";
 
 export default function MessagesTab() {
   const { state, updateCard, mutateCard } = useCard();
+  const { d, t } = useI18n();
   const { card } = state;
   const greetings = card.alternate_greetings;
   const groupGreetings = card.group_only_greetings ?? [];
@@ -42,18 +44,18 @@ export default function MessagesTab() {
   return (
     <div className="space-y-6">
       <TextArea
-        label="First Message"
-        tooltip="The character's opening message when a new chat begins."
+        label={d.messages.first}
+        tooltip={d.messages.firstTip}
         value={card.first_mes}
         onChange={(v) => updateCard({ first_mes: v })}
-        placeholder="*The character enters the scene…*"
+        placeholder={d.messages.firstPlaceholder}
         rows={8}
       />
 
       <Field
-        label="Alternate Greetings"
-        tooltip="Additional opening messages. Users can swipe between these."
-        hint="Additional opening messages. Users can swipe between these."
+        label={d.messages.altGreetings}
+        tooltip={d.messages.altGreetingsTip}
+        hint={d.messages.altGreetingsHint}
       >
         <div className="space-y-2">
           {greetings.map((g, i) => (
@@ -65,24 +67,24 @@ export default function MessagesTab() {
               onChange={(v) => setGreeting(i, v)}
               onRemove={() => removeGreeting(i)}
               onMove={(dir) => moveGreeting(i, dir)}
-              placeholder="*An alternate opening message…*"
-              label={`Greeting ${i + 1}`}
+              placeholder={d.messages.greetingPlaceholder}
+              label={t(d.messages.greeting, { n: i + 1 })}
             />
           ))}
           <button type="button" onClick={addGreeting} className="btn-secondary text-sm">
-            <Plus size={15} /> Add Greeting
+            <Plus size={15} /> {d.messages.addGreeting}
           </button>
         </div>
       </Field>
 
       <Field
-        label="Group Chat Greetings"
-        tooltip="Shown only when this character is used in a group chat (V3)."
-        hint="Shown only when this character is used in a group chat (V3)."
+        label={d.messages.groupGreetings}
+        tooltip={d.messages.groupGreetingsTip}
+        hint={d.messages.groupGreetingsHint}
       >
         <div className="space-y-2">
           {groupGreetings.length === 0 && (
-            <p className="text-xs text-zinc-600">No group-only greetings.</p>
+            <p className="text-xs text-fg-subtle">{d.messages.groupEmpty}</p>
           )}
           {groupGreetings.map((g, i) => (
             <div key={i} className="flex gap-2">
@@ -90,7 +92,7 @@ export default function MessagesTab() {
                 className="textarea flex-1"
                 rows={3}
                 value={g}
-                placeholder="*The character joins the group…*"
+                placeholder={d.messages.groupPlaceholder}
                 onChange={(e) => setGroup(i, e.target.value)}
               />
               <button
@@ -104,16 +106,13 @@ export default function MessagesTab() {
             </div>
           ))}
           <button type="button" onClick={addGroup} className="btn-secondary text-sm">
-            <Plus size={15} /> Add
+            <Plus size={15} /> {d.common.add}
           </button>
         </div>
       </Field>
 
       <div>
-        <InfoLabel
-          label="Message Examples"
-          hint="Example conversations to guide the AI. Use <START> to separate examples."
-        />
+        <InfoLabel label={d.messages.examples} hint={d.messages.examplesTip} />
         <textarea
           className="textarea font-mono text-[13px]"
           rows={10}
@@ -121,10 +120,7 @@ export default function MessagesTab() {
           onChange={(e) => updateCard({ mes_example: e.target.value })}
           placeholder={"<START>\n{{user}}: Hello!\n{{char}}: *smiles* Well met."}
         />
-        <p className="field-hint">
-          Example conversations to guide the AI. Use <code>{"<START>"}</code> to separate
-          examples.
-        </p>
+        <p className="field-hint">{d.messages.examplesHint}</p>
       </div>
     </div>
   );
@@ -151,14 +147,14 @@ function GreetingCard({
 }) {
   const [open, setOpen] = useState(true);
   return (
-    <div className="rounded-[12px] border border-[#ffffff0f] bg-zinc-900/40">
+    <div className="rounded-[12px] border border-border bg-surface/40">
       <div className="flex items-center gap-2 px-3 py-2">
-        <div className="flex flex-col text-zinc-600">
+        <div className="flex flex-col text-fg-subtle">
           <button
             type="button"
             disabled={index === 0}
             onClick={() => onMove(-1)}
-            className="hover:text-zinc-300 disabled:opacity-30"
+            className="hover:text-fg-muted disabled:opacity-30"
             aria-label="Move up"
           >
             <ChevronUp size={14} />
@@ -167,21 +163,21 @@ function GreetingCard({
             type="button"
             disabled={index === total - 1}
             onClick={() => onMove(1)}
-            className="hover:text-zinc-300 disabled:opacity-30"
+            className="hover:text-fg-muted disabled:opacity-30"
             aria-label="Move down"
           >
             <ChevronDown size={14} />
           </button>
         </div>
-        <GripVertical size={14} className="text-zinc-700" />
+        <GripVertical size={14} className="text-fg-subtle" />
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
-          className="flex-1 truncate text-left text-sm font-medium text-zinc-200"
+          className="flex-1 truncate text-left text-sm font-medium text-fg"
         >
           {label}
           {!open && value && (
-            <span className="ml-2 font-normal text-zinc-500">
+            <span className="ml-2 font-normal text-fg-faint">
               {value.slice(0, 48)}…
             </span>
           )}

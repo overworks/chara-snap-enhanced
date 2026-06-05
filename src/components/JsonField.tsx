@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useI18n } from "../i18n";
 import { InfoLabel } from "./fields";
 
 /** Edit a plain JSON object as text, committing only when it parses. */
@@ -15,6 +16,7 @@ export function JsonObjectField({
   onChange: (v: Record<string, unknown>) => void;
   rows?: number;
 }) {
+  const { d } = useI18n();
   const [text, setText] = useState(() => serialize(value));
   const [error, setError] = useState<string | null>(null);
 
@@ -45,10 +47,10 @@ export function JsonObjectField({
         setError(null);
         onChange(parsed);
       } else {
-        setError("Must be a JSON object.");
+        setError(d.json.mustBeObject);
       }
     } catch {
-      setError("Invalid JSON.");
+      setError(d.json.invalid);
     }
   }
 
