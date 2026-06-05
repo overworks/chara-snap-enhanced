@@ -1,4 +1,4 @@
-# Chara Snap (Enhanced)
+# Chara Studio
 
 A free, 100% client-side **AI character card editor** for SillyTavern / RisuAI / Agnai —
 a clean reconstruction of [charasnap.com](https://charasnap.com) with added features.

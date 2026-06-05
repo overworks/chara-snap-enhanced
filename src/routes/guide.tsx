@@ -3,7 +3,7 @@ import HeaderControls from "../components/HeaderControls";
 
 const TOC = [
   ["what-is-a-character-card", "1. What is a Character Card?"],
-  ["getting-started", "2. Getting Started with Chara Snap"],
+  ["getting-started", "2. Getting Started with Chara Studio"],
   ["character-card-fields", "3. Understanding Character Card Fields"],
   ["lorebooks", "4. Working with Lorebooks"],
   ["v2-vs-v3", "5. V2 vs V3 (CHARX) Format"],
@@ -62,7 +62,7 @@ export default function GuidePage() {
       <header className="sticky top-0 z-20 border-b border-border bg-bg/80 backdrop-blur">
         <div className="mx-auto flex max-w-3xl items-center justify-between px-5 py-3">
           <Link to="/" className="text-sm text-fg-muted hover:text-fg">
-            ← Back to Chara Snap
+            ← Back to Chara Studio
           </Link>
           <div className="flex items-center gap-2">
             <HeaderControls className="hidden sm:flex" />
@@ -106,12 +106,12 @@ export default function GuidePage() {
           <p>
             The most widely supported format is the Character Card V2 specification,
             popularized by SillyTavern. A newer V3 (CHARX) spec adds assets and a few extra
-            fields. Chara Snap reads and writes both.
+            fields. Chara Studio reads and writes both.
           </p>
         </section>
 
         <section className="mt-12 space-y-4">
-          <H id="getting-started">2. Getting Started with Chara Snap</H>
+          <H id="getting-started">2. Getting Started with Chara Studio</H>
           <h3 className="font-semibold text-fg">Editing an existing card</h3>
           <ol className="list-decimal space-y-1 pl-5">
             <li>Drag a PNG (or JSON/CHARX) card onto the drop zone on the home page.</li>
@@ -222,7 +222,7 @@ export default function GuidePage() {
             <strong>Use V2</strong> for maximum compatibility — if you're sharing on Chub.ai
             or CharacterHub and want it to work everywhere, V2 PNG is the safe choice.{" "}
             <strong>Use V3</strong> if you need multiple assets or V3-specific fields, and
-            your target app supports it. Chara Snap exposes V3 fields in the editor and
+            your target app supports it. Chara Studio exposes V3 fields in the editor and
             preserves them during export even inside a V2 PNG.
           </p>
         </section>
@@ -243,7 +243,7 @@ export default function GuidePage() {
           <H id="exporting-and-sharing">7. Exporting and Sharing Your Cards</H>
           <h3 className="font-semibold text-fg">Export as PNG</h3>
           <p className="text-sm text-fg-muted">
-            The standard export. Chara Snap bakes your character data into the PNG as a
+            The standard export. Chara Studio bakes your character data into the PNG as a
             V2-format <code>tEXt</code> chunk. The result is both a viewable image and a
             complete character definition — what you upload to hosting sites and import into
             chat apps.

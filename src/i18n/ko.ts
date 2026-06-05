@@ -3,7 +3,7 @@ import type { Dict } from "./en";
 
 export const ko: Dict = {
   common: {
-    appName: "Chara Snap",
+    appName: "Chara Studio",
     guide: "가이드",
     openEditor: "에디터 열기",
     createNew: "새로 만들기",
@@ -33,9 +33,9 @@ export const ko: Dict = {
       "캐릭터 카드를 만들고, 편집하고, 내보내는 데 필요한 모든 것 — 전부 브라우저 안에서.",
     guideLink: "전체 캐릭터 카드 가이드 보기 →",
     faqHeading: "자주 묻는 질문",
-    whatTitle: "Chara Snap이란?",
+    whatTitle: "Chara Studio란?",
     whatBody:
-      "Chara Snap은 브라우저에서 바로 사용할 수 있는 무료 AI 롤플레이 캐릭터 카드 에디터입니다. SillyTavern V2 및 V3 PNG 포맷을 위한 캐릭터 카드 제작·편집 도구로, 설치나 계정 없이 바로 사용할 수 있습니다.",
+      "Chara Studio는 브라우저에서 바로 사용할 수 있는 무료 AI 롤플레이 캐릭터 카드 에디터입니다. SillyTavern V2 및 V3 PNG 포맷을 위한 캐릭터 카드 제작·편집 도구로, 설치나 계정 없이 바로 사용할 수 있습니다.",
     compatible: "호환 앱",
     guideFooterLink: "캐릭터 카드 가이드 →",
     originTitle: "이 프로젝트가 만들어진 이유",
@@ -71,12 +71,12 @@ export const ko: Dict = {
         a: "캐릭터 카드는 AI 캐릭터를 설명하는 JSON 데이터를 담은 PNG 이미지 파일입니다. 캐릭터의 성격, 배경, 예시 대화, 프롬프트 등이 들어갑니다. 가장 널리 쓰이는 포맷은 SillyTavern V2 사양 기반으로, 흔히 태번 카드 또는 chara 카드라고 부릅니다. chara 카드는 PNG 이미지와 함께 JSON 데이터를 담은 tEXt 청크를 포함합니다.",
       },
       {
-        q: "Chara Snap 카드는 어떤 앱에서 동작하나요?",
-        a: "Chara Snap에서 내보낸 캐릭터 카드는 표준 V2 PNG 이미지 파일입니다. SillyTavern, RisuAI, Agnai, Backyard AI, Janitor AI, Venus AI, OpenRoleplay 등 Character Card V2를 지원하는 모든 앱에서 동작합니다. Chub.ai나 CharacterHub 같은 호스트에 업로드할 수도 있습니다.",
+        q: "Chara Studio 카드는 어떤 앱에서 동작하나요?",
+        a: "Chara Studio에서 내보낸 캐릭터 카드는 표준 V2 PNG 이미지 파일입니다. SillyTavern, RisuAI, Agnai, Backyard AI, Janitor AI, Venus AI, OpenRoleplay 등 Character Card V2를 지원하는 모든 앱에서 동작합니다. Chub.ai나 CharacterHub 같은 호스트에 업로드할 수도 있습니다.",
       },
       {
         q: "제 데이터는 안전한가요?",
-        a: "네. Chara Snap은 전적으로 브라우저 안에서 실행됩니다. 캐릭터 카드, 이미지, 편집 내용은 어디로도 전송되지 않으며, 관여하는 서버가 없습니다. 브라우저 개발자 콘솔을 확인하면 카드를 편집할 때 네트워크 활동이 없다는 것을 직접 검증할 수 있습니다.",
+        a: "네. Chara Studio는 전적으로 브라우저 안에서 실행됩니다. 캐릭터 카드, 이미지, 편집 내용은 어디로도 전송되지 않으며, 관여하는 서버가 없습니다. 브라우저 개발자 콘솔을 확인하면 카드를 편집할 때 네트워크 활동이 없다는 것을 직접 검증할 수 있습니다.",
       },
       {
         q: "V2와 V3의 차이는 무엇인가요?",
@@ -88,7 +88,7 @@ export const ko: Dict = {
       },
       {
         q: "계정이 필요한가요?",
-        a: "아니요. Chara Snap은 완전 무료이며 가입, 로그인, 계정이 전혀 필요 없습니다. 웹사이트를 열고 바로 편집을 시작하세요!",
+        a: "아니요. Chara Studio는 완전 무료이며 가입, 로그인, 계정이 전혀 필요 없습니다. 웹사이트를 열고 바로 편집을 시작하세요!",
       },
     ],
   },

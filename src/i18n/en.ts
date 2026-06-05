@@ -3,7 +3,7 @@
 
 export const en = {
   common: {
-    appName: "Chara Snap",
+    appName: "Chara Studio",
     guide: "Guide",
     openEditor: "Open Editor",
     createNew: "Create New",
@@ -33,9 +33,9 @@ export const en = {
       "Everything you need to build, edit, and export character cards — all in your browser.",
     guideLink: "Read the full character card guide →",
     faqHeading: "Frequently Asked Questions",
-    whatTitle: "What is Chara Snap?",
+    whatTitle: "What is Chara Studio?",
     whatBody:
-      "Chara Snap is a free character card editor for AI roleplay, available directly in your browser. It is a character card maker and editor for SillyTavern V2 and V3 PNG formats — you don't need to install anything or make an account to use it.",
+      "Chara Studio is a free character card editor for AI roleplay, available directly in your browser. It is a character card maker and editor for SillyTavern V2 and V3 PNG formats — you don't need to install anything or make an account to use it.",
     compatible: "Compatible with",
     guideFooterLink: "Character Card Guide →",
     originTitle: "Why this project exists",
@@ -71,12 +71,12 @@ export const en = {
         a: "A character card is a PNG image file containing a JSON data payload that describes an AI character. This includes a character's personality, background, sample conversation, and prompts. The most popular format is based on the SillyTavern V2 spec, commonly known as tavern cards or chara cards. A chara card contains a PNG image along with a tEXt chunk containing a JSON data payload.",
       },
       {
-        q: "What apps work with Chara Snap cards?",
-        a: "Character cards exported from Chara Snap are standard V2 PNG image files. They work with any app that supports Character Card V2, such as SillyTavern, RisuAI, Agnai, Backyard AI, Janitor AI, Venus AI, OpenRoleplay, and others. You can upload chara cards to any host, such as Chub.ai or CharacterHub.",
+        q: "What apps work with Chara Studio cards?",
+        a: "Character cards exported from Chara Studio are standard V2 PNG image files. They work with any app that supports Character Card V2, such as SillyTavern, RisuAI, Agnai, Backyard AI, Janitor AI, Venus AI, OpenRoleplay, and others. You can upload chara cards to any host, such as Chub.ai or CharacterHub.",
       },
       {
         q: "Is my data safe?",
-        a: "Yes. Chara Snap runs entirely within your browser. Your character cards, images, and any edits you make are not sent anywhere — there are no servers involved. You can verify this by checking your browser's developer console: there's no network activity when you edit a card.",
+        a: "Yes. Chara Studio runs entirely within your browser. Your character cards, images, and any edits you make are not sent anywhere — there are no servers involved. You can verify this by checking your browser's developer console: there's no network activity when you edit a card.",
       },
       {
         q: "What's the difference between V2 and V3?",
@@ -88,7 +88,7 @@ export const en = {
       },
       {
         q: "Do I need an account?",
-        a: "No. Chara Snap is completely free, with no sign-up, login, or account required. Just open the website and start editing!",
+        a: "No. Chara Studio is completely free, with no sign-up, login, or account required. Just open the website and start editing!",
       },
     ],
   },
