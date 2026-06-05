@@ -38,6 +38,11 @@ export const ko: Dict = {
       "Chara Snap은 브라우저에서 바로 사용할 수 있는 무료 AI 롤플레이 캐릭터 카드 에디터입니다. SillyTavern V2 및 V3 PNG 포맷을 위한 캐릭터 카드 제작·편집 도구로, 설치나 계정 없이 바로 사용할 수 있습니다.",
     compatible: "호환 앱",
     guideFooterLink: "캐릭터 카드 가이드 →",
+    originTitle: "이 프로젝트가 만들어진 이유",
+    originBody:
+      "charasnap.com에 기능을 추가하고 싶었지만, 공개된 소스가 없고 제작자와도 연락이 닿지 않았습니다. 작업을 이어가기 위해 부득이 독립적으로 다시 만든 재구성판입니다.",
+    originTakedown:
+      "원본과 제휴하거나 원본의 승인을 받은 것이 아닙니다. 원저작자가 원하지 않을 경우 요청에 따라 이 프로젝트와 사이트는 즉시 삭제됩니다.",
     features: [
       {
         title: "V2 & V3 캐릭터 카드 편집",

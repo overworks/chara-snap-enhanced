@@ -38,6 +38,11 @@ export const en = {
       "Chara Snap is a free character card editor for AI roleplay, available directly in your browser. It is a character card maker and editor for SillyTavern V2 and V3 PNG formats — you don't need to install anything or make an account to use it.",
     compatible: "Compatible with",
     guideFooterLink: "Character Card Guide →",
+    originTitle: "Why this project exists",
+    originBody:
+      "I wanted to add features to charasnap.com, but it ships no public source and its author could not be reached. This is an independent, clean-room reconstruction built out of necessity so that work could continue.",
+    originTakedown:
+      "It is not affiliated with or endorsed by the original. If the original author objects, this project and its site will be taken down immediately on request.",
     features: [
       {
         title: "Edit V2 & V3 Character Cards",

@@ -4,6 +4,17 @@ A free, 100% client-side **AI character card editor** for SillyTavern / RisuAI /
 a clean reconstruction of [charasnap.com](https://charasnap.com) with added features.
 No backend, no accounts, no uploads: everything runs in your browser.
 
+## Why this project exists
+
+I wanted to add features to [charasnap.com](https://charasnap.com), but it ships **no
+public source** and its author **could not be reached**. This is an independent,
+clean-room reconstruction built out of necessity so that work could continue.
+
+> [!IMPORTANT]
+> This project is **not affiliated with or endorsed by** the original Chara Snap or its
+> author. If the original author objects, **this repository and its deployed site will be
+> taken down immediately on request.** Open an issue or contact the maintainer.
+
 ## Features
 
 - Import **PNG** (V2 `chara` / V3 `ccv3` tEXt chunks), **JSON**, and **CHARX** cards

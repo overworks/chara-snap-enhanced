@@ -8,6 +8,7 @@ import {
   Smartphone,
   Upload,
   ChevronDown,
+  Info,
 } from "lucide-react";
 import { useCard } from "../state/CardContext";
 import { readCardFile, loadExampleCard } from "../lib/io";
@@ -227,6 +228,22 @@ export default function LandingPage() {
           <p className="mt-2 max-w-3xl text-sm leading-relaxed text-fg-muted">
             {d.landing.whatBody}
           </p>
+
+          <div className="mt-6 flex gap-3 rounded-[12px] border border-warning/40 bg-warning/5 p-4">
+            <Info size={18} className="mt-0.5 shrink-0 text-warning" />
+            <div className="max-w-3xl space-y-1.5">
+              <h3 className="text-sm font-semibold text-fg">
+                {d.landing.originTitle}
+              </h3>
+              <p className="text-sm leading-relaxed text-fg-muted">
+                {d.landing.originBody}
+              </p>
+              <p className="text-sm leading-relaxed text-fg-muted">
+                {d.landing.originTakedown}
+              </p>
+            </div>
+          </div>
+
           <h3 className="mt-6 text-sm font-semibold text-fg-muted">
             {d.landing.compatible}
           </h3>
