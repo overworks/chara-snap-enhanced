@@ -25,8 +25,31 @@
       content="Free client-side character card editor for SillyTavern, RisuAI, and Agnai. No uploads, no account needed."
     />
     <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Apply the saved theme + language before paint to avoid a flash. -->
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem("chara-snap-theme") || "system";
+          var dark =
+            t === "dark" ||
+            (t !== "light" &&
+              window.matchMedia("(prefers-color-scheme: dark)").matches);
+          document.documentElement.classList.add(dark ? "dark" : "light");
+          var l = localStorage.getItem("chara-snap-locale");
+          if (!l) {
+            l = (navigator.language || "en").toLowerCase().startsWith("ko")
+              ? "ko"
+              : "en";
+          }
+          document.documentElement.lang = l;
+        } catch (e) {
+          document.documentElement.classList.add("dark");
+        }
+      })();
+    </script>
   </head>
-  <body class="bg-zinc-950 text-zinc-100 antialiased">
+  <body class="antialiased">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

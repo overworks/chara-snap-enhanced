@@ -1,15 +1,28 @@
 @import "tailwindcss";
 
-/* ── Design tokens reconstructed from charasnap.com ─────────────────── */
+/* Enable class-based dark mode (ThemeProvider toggles .dark / .light on <html>). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ── Semantic color tokens (var-backed so they re-theme at runtime) ──── */
 @theme {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-elevated: var(--elevated);
+  --color-elevated-hover: var(--elevated-hover);
+
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-faint: var(--fg-faint);
+  --color-fg-subtle: var(--fg-subtle);
+
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+
   --color-accent: #6d5cff;
   --color-accent-hover: #7e70ff;
-  --color-accent-subtle: #6d5cff1a;
+  --color-accent-text: var(--accent-text);
+  --color-accent-subtle: var(--accent-subtle);
   --color-accent-border: #6d5cff40;
-
-  --color-surface-base: #111114;
-  --color-surface-border: #ffffff0f;
-  --color-surface-border-strong: #ffffff1a;
 
   --color-success: #34d399;
   --color-error: #f87171;
@@ -25,6 +38,41 @@
     "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
     "Liberation Mono", "Courier New", monospace;
+}
+
+/* ── Palettes ───────────────────────────────────────────────────────── */
+/* Dark values match the original Chara Snap look. */
+:root,
+:root.dark {
+  color-scheme: dark;
+  --bg: #09090b;
+  --surface: #111114;
+  --elevated: #27272a;
+  --elevated-hover: #3f3f46;
+  --fg: #f4f4f5;
+  --fg-muted: #a1a1aa;
+  --fg-faint: #71717a;
+  --fg-subtle: #52525b;
+  --border: #ffffff0f;
+  --border-strong: #ffffff1a;
+  --accent-text: #a99dff;
+  --accent-subtle: #6d5cff1f;
+}
+
+:root.light {
+  color-scheme: light;
+  --bg: #fafafa;
+  --surface: #ffffff;
+  --elevated: #f4f4f5;
+  --elevated-hover: #e4e4e7;
+  --fg: #18181b;
+  --fg-muted: #52525b;
+  --fg-faint: #71717a;
+  --fg-subtle: #a1a1aa;
+  --border: #00000014;
+  --border-strong: #00000024;
+  --accent-text: #5b4bd6;
+  --accent-subtle: #6d5cff14;
 }
 
 :root {
@@ -44,44 +92,46 @@ body,
 
 body {
   margin: 0;
+  background: var(--bg);
+  color: var(--fg);
 }
 
-/* Thin custom scrollbars to match the dark UI */
+/* Thin custom scrollbars that follow the theme */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #ffffff1a transparent;
+  scrollbar-color: var(--border-strong) transparent;
 }
 *::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 *::-webkit-scrollbar-thumb {
-  background: #ffffff1a;
+  background: var(--border-strong);
   border-radius: 9999px;
 }
 *::-webkit-scrollbar-thumb:hover {
-  background: #ffffff33;
+  background: var(--fg-subtle);
 }
 
 /* ── Shared component utilities ─────────────────────────────────────── */
 @layer components {
   .field-label {
-    @apply block text-xs font-medium text-zinc-400 mb-1.5;
+    @apply block text-xs font-medium text-fg-muted mb-1.5;
   }
   .field-hint {
-    @apply mt-1.5 text-xs text-zinc-500 leading-relaxed;
+    @apply mt-1.5 text-xs text-fg-faint leading-relaxed;
   }
   .input {
-    @apply w-full rounded-[10px] bg-zinc-900/60 border border-[#ffffff0f]
-      px-3 py-2 text-sm text-zinc-100 placeholder:text-zinc-600
+    @apply w-full rounded-[10px] bg-surface border border-border
+      px-3 py-2 text-sm text-fg placeholder:text-fg-subtle
       outline-none transition
-      focus:border-[#6d5cff] focus:ring-2 focus:ring-[#6d5cff40];
+      focus:border-accent focus:ring-2 focus:ring-accent/25;
   }
   .textarea {
-    @apply w-full rounded-[10px] bg-zinc-900/60 border border-[#ffffff0f]
-      px-3 py-2 text-sm text-zinc-100 placeholder:text-zinc-600
+    @apply w-full rounded-[10px] bg-surface border border-border
+      px-3 py-2 text-sm text-fg placeholder:text-fg-subtle
       outline-none transition resize-y leading-relaxed
-      focus:border-[#6d5cff] focus:ring-2 focus:ring-[#6d5cff40];
+      focus:border-accent focus:ring-2 focus:ring-accent/25;
   }
   .btn {
     @apply inline-flex items-center justify-center gap-2 rounded-[10px]
@@ -92,27 +142,27 @@ body {
     @apply inline-flex items-center justify-center gap-2 rounded-[10px]
       px-3.5 py-2 text-sm font-medium transition select-none
       disabled:opacity-50 disabled:pointer-events-none
-      bg-[#6d5cff] text-white hover:bg-[#7e70ff]
+      bg-accent text-white hover:bg-accent-hover
       shadow-[0_4px_14px_-4px_#6d5cffaa];
   }
   .btn-secondary {
     @apply inline-flex items-center justify-center gap-2 rounded-[10px]
       px-3.5 py-2 text-sm font-medium transition select-none
       disabled:opacity-50 disabled:pointer-events-none
-      bg-zinc-800/80 text-zinc-200 border border-[#ffffff0f]
-      hover:bg-zinc-700/80;
+      bg-elevated text-fg border border-border
+      hover:bg-elevated-hover;
   }
   .btn-ghost {
     @apply inline-flex items-center justify-center gap-2 rounded-[10px]
       px-3.5 py-2 text-sm font-medium transition select-none
       disabled:opacity-50 disabled:pointer-events-none
-      text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/60;
+      text-fg-muted hover:text-fg hover:bg-elevated;
   }
   .card-surface {
-    @apply rounded-[14px] bg-surface-base border border-[#ffffff0f];
+    @apply rounded-[14px] bg-surface border border-border;
   }
   .chip {
-    @apply inline-flex items-center gap-1 rounded-full bg-zinc-800
-      px-2.5 py-1 text-xs text-zinc-300;
+    @apply inline-flex items-center gap-1 rounded-full bg-elevated
+      px-2.5 py-1 text-xs text-fg-muted;
   }
 }
