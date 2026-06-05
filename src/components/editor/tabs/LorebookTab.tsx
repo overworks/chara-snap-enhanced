@@ -313,6 +313,12 @@ function EntryRow({
               checked={entry.case_sensitive}
               onChange={(v) => onChange({ case_sensitive: v })}
             />
+            <Checkbox
+              label={d.lorebook.useRegex}
+              tooltip={d.lorebook.useRegexTip}
+              checked={entry.use_regex}
+              onChange={(v) => onChange({ use_regex: v })}
+            />
           </div>
 
           <JsonObjectField

@@ -223,6 +223,8 @@ export const en = {
     constantTip: "Always inject regardless of keywords. Use sparingly.",
     caseSensitive: "Case sensitive",
     caseSensitiveTip: "Keyword matching becomes case-sensitive. Off by default.",
+    useRegex: "Regex keys",
+    useRegexTip: "Treat each keyword as a regular expression pattern (V3).",
     entryExtensions: "Entry Extensions",
     entryExtensionsHint: "Advanced app-specific entry metadata. Enter a valid JSON object.",
   },
@@ -249,7 +251,7 @@ export const en = {
   },
   assets: {
     intro:
-      "Source links, assets, and timestamps live on the V3 card envelope and are preserved on export.",
+      "Source links, assets, and timestamps live on the V3 card envelope. Uploaded files are embedded into CHARX exports.",
     sources: "Source Links",
     sourcesTip: "Provenance URLs, origin IDs, or migration notes.",
     sourcesHint: "Provenance URLs, origin IDs, or migration notes.",
@@ -261,6 +263,9 @@ export const en = {
     assetsHint: "Referenced assets such as expression sprites or backgrounds (V3 / CHARX).",
     assetsEmpty: "No assets.",
     addAsset: "Add Asset",
+    upload: "Upload",
+    embedded: "Embedded in CHARX export",
+    missingBytes: "File data not loaded — upload again to embed it.",
     uriPlaceholder: "uri (embeded://… or https://…)",
     extPlaceholder: "ext",
     namePlaceholder: "name",
