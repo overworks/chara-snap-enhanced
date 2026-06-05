@@ -101,6 +101,9 @@ export type Severity = "error" | "warning" | "info";
 
 export interface ValidationIssue {
   field: string;
-  message: string;
+  /** Key into the i18n `validation` dictionary. */
+  code: string;
+  /** Interpolation params for the message (e.g. { n: 2 }). */
+  params?: Record<string, string | number>;
   severity: Severity;
 }

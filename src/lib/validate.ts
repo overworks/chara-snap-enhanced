@@ -1,4 +1,6 @@
 // Card validation — mirrors Chara Snap's severity model (error/warning/info).
+// Issues carry a `code` (key into the i18n `validation` dict) so the UI can
+// render messages in the active language.
 
 import type { CharacterCard, ValidationIssue } from "./types";
 
@@ -6,72 +8,53 @@ export function validateCard(card: CharacterCard): ValidationIssue[] {
   const issues: ValidationIssue[] = [];
   const push = (
     field: string,
-    message: string,
+    code: string,
     severity: ValidationIssue["severity"],
-  ) => issues.push({ field, message, severity });
+    params?: Record<string, string | number>,
+  ) => issues.push({ field, code, severity, params });
 
-  if (!card.name?.trim()) push("name", "Name is required", "error");
+  if (!card.name?.trim()) push("name", "nameRequired", "error");
   if (!card.description?.trim())
-    push("description", "Description is empty", "warning");
+    push("description", "descriptionEmpty", "warning");
   if (!card.first_mes?.trim())
-    push(
-      "first_mes",
-      "First message is missing — most clients expect one",
-      "warning",
-    );
+    push("first_mes", "firstMesMissing", "warning");
   if (card.personality && card.personality.length > 4000)
-    push("personality", "Personality field is very long", "info");
+    push("personality", "personalityLong", "info");
 
   if (card.alternate_greetings.some((g) => !g.trim()))
-    push(
-      "alternate_greetings",
-      "One or more alternate greetings are empty",
-      "warning",
-    );
+    push("alternate_greetings", "altGreetingsEmpty", "warning");
   if (card.group_only_greetings?.some((g) => !g.trim()))
-    push(
-      "group_only_greetings",
-      "One or more group-only greetings are empty",
-      "warning",
-    );
+    push("group_only_greetings", "groupGreetingsEmpty", "warning");
 
   if (card.creator_notes_multilingual) {
     for (const [lang, text] of Object.entries(card.creator_notes_multilingual)) {
       if (!lang.trim())
-        push("creator_notes_multilingual", "Empty language code", "warning");
+        push("creator_notes_multilingual", "emptyLangCode", "warning");
       if (!text.trim())
-        push(
-          `creator_notes_multilingual.${lang}`,
-          "Empty translation",
-          "warning",
-        );
+        push(`creator_notes_multilingual.${lang}`, "emptyTranslation", "warning");
     }
   }
 
   if (card.source?.some((s) => !s.trim()))
-    push("source", "One or more source links are empty", "warning");
+    push("source", "sourceEmpty", "warning");
 
   card.assets?.forEach((asset, idx) => {
     if (!asset.uri.trim())
-      push(`assets.${idx}.uri`, `Asset ${idx + 1} is missing a URI`, "warning");
+      push(`assets.${idx}.uri`, "assetUriMissing", "warning", { n: idx + 1 });
     if (!asset.name.trim())
-      push(`assets.${idx}.name`, `Asset ${idx + 1} is missing a name`, "info");
+      push(`assets.${idx}.name`, "assetNameMissing", "info", { n: idx + 1 });
   });
 
   if (card.character_book) {
     const book = card.character_book;
     if (!book.entries.length && (book.name || book.description))
-      push(
-        "character_book",
-        "Lorebook metadata is set, but it has no entries",
-        "info",
-      );
+      push("character_book", "lorebookNoEntries", "info");
     book.entries.forEach((entry, i) => {
       const name = entry.name || `Entry ${i + 1}`;
       if (entry.keys.length === 0 || entry.keys.every((k) => !k.trim()))
-        push(`lorebook.${name}`, "Lorebook entry has no keywords", "warning");
+        push(`lorebook.${name}`, "entryNoKeywords", "warning");
       if (!entry.content?.trim())
-        push(`lorebook.${name}`, "Lorebook entry has no content", "warning");
+        push(`lorebook.${name}`, "entryNoContent", "warning");
     });
   }
 
@@ -80,18 +63,10 @@ export function validateCard(card: CharacterCard): ValidationIssue[] {
     typeof card.modification_date === "number" &&
     card.modification_date < card.creation_date
   )
-    push(
-      "modification_date",
-      "Modification date is earlier than creation date",
-      "warning",
-    );
+    push("modification_date", "dateOrder", "warning");
 
   if (card.mes_example && !card.mes_example.includes("<START>"))
-    push(
-      "mes_example",
-      "Message examples typically start with a <START> delimiter",
-      "info",
-    );
+    push("mes_example", "mesExampleStart", "info");
 
   return issues;
 }
