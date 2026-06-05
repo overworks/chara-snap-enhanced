@@ -12,6 +12,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@fontsource/bricolage-grotesque": "^5.2.10",
     "@tanstack/react-router": "^1.58.3",
     "fflate": "^0.8.2",
     "lucide-react": "^0.460.0",

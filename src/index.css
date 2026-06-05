@@ -18,16 +18,19 @@
   --color-border: var(--border);
   --color-border-strong: var(--border-strong);
 
-  --color-accent: #6d5cff;
-  --color-accent-hover: #7e70ff;
+  /* Brand — Persimmon. `accent` is the white-text fill (deepened for contrast);
+     `accent-hover` is the bright signature. See DESIGN.md. */
+  --color-accent: #e2552e;
+  --color-accent-hover: #f4623a;
   --color-accent-text: var(--accent-text);
   --color-accent-subtle: var(--accent-subtle);
-  --color-accent-border: #6d5cff40;
+  --color-accent-border: #f4623a40;
 
-  --color-success: #34d399;
-  --color-error: #f87171;
-  --color-info: #60a5fa;
-  --color-warning: #f99c00;
+  /* Status colors are var-backed so they re-theme (deepened in light mode). */
+  --color-success: var(--success);
+  --color-error: var(--error);
+  --color-info: var(--info);
+  --color-warning: var(--warning);
 
   --radius-sm: 6px;
   --radius-md: 10px;
@@ -38,10 +41,13 @@
     "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
     "Liberation Mono", "Courier New", monospace;
+  /* Display typeface for headings/wordmark only (system fallback so a missing
+     glyph or slow load never breaks layout). */
+  --font-display: "Bricolage Grotesque", var(--font-sans);
 }
 
 /* ── Palettes ───────────────────────────────────────────────────────── */
-/* Dark values match the original Chara Snap look. */
+/* Dark is the canonical reference theme (see DESIGN.md). */
 :root,
 :root.dark {
   color-scheme: dark;
@@ -55,8 +61,12 @@
   --fg-subtle: #52525b;
   --border: #ffffff0f;
   --border-strong: #ffffff1a;
-  --accent-text: #a99dff;
-  --accent-subtle: #6d5cff1f;
+  --accent-text: #ff8a66;
+  --accent-subtle: #f4623a1f;
+  --success: #34d399;
+  --error: #f87171;
+  --info: #60a5fa;
+  --warning: #f99c00;
 }
 
 :root.light {
@@ -71,8 +81,12 @@
   --fg-subtle: #a1a1aa;
   --border: #00000014;
   --border-strong: #00000024;
-  --accent-text: #5b4bd6;
-  --accent-subtle: #6d5cff14;
+  --accent-text: #c2451f;
+  --accent-subtle: #f4623a14;
+  --success: #0f9d6b;
+  --error: #dc2626;
+  --info: #2563eb;
+  --warning: #c2710c;
 }
 
 :root {
@@ -125,44 +139,41 @@ body {
     @apply w-full rounded-[10px] bg-surface border border-border
       px-3 py-2 text-sm text-fg placeholder:text-fg-subtle
       outline-none transition
-      focus:border-accent focus:ring-2 focus:ring-accent/25;
+      focus:border-accent focus:ring-2 focus:ring-accent/30;
   }
   .textarea {
     @apply w-full rounded-[10px] bg-surface border border-border
       px-3 py-2 text-sm text-fg placeholder:text-fg-subtle
       outline-none transition resize-y leading-relaxed
-      focus:border-accent focus:ring-2 focus:ring-accent/25;
+      focus:border-accent focus:ring-2 focus:ring-accent/30;
   }
-  .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-[10px]
-      px-3.5 py-2 text-sm font-medium transition select-none
-      disabled:opacity-50 disabled:pointer-events-none;
-  }
-  .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-[10px]
-      px-3.5 py-2 text-sm font-medium transition select-none
-      disabled:opacity-50 disabled:pointer-events-none
-      bg-accent text-white hover:bg-accent-hover
-      shadow-[0_4px_14px_-4px_#6d5cffaa];
-  }
-  .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 rounded-[10px]
-      px-3.5 py-2 text-sm font-medium transition select-none
-      disabled:opacity-50 disabled:pointer-events-none
-      bg-elevated text-fg border border-border
-      hover:bg-elevated-hover;
-  }
+  /* Shared button base: tactile press + consistent accent focus ring. */
+  .btn,
+  .btn-primary,
+  .btn-secondary,
   .btn-ghost {
     @apply inline-flex items-center justify-center gap-2 rounded-[10px]
       px-3.5 py-2 text-sm font-medium transition select-none
-      disabled:opacity-50 disabled:pointer-events-none
-      text-fg-muted hover:text-fg hover:bg-elevated;
+      active:scale-[0.98]
+      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40
+      disabled:opacity-50 disabled:pointer-events-none disabled:active:scale-100;
+  }
+  .btn-primary {
+    @apply bg-accent text-white hover:bg-accent-hover
+      shadow-[0_4px_14px_-4px_#e2552eaa] hover:shadow-[0_6px_20px_-4px_#e2552ecc];
+  }
+  .btn-secondary {
+    @apply bg-elevated text-fg border border-border hover:bg-elevated-hover;
+  }
+  .btn-ghost {
+    @apply text-fg-muted hover:text-fg hover:bg-elevated;
   }
   .card-surface {
-    @apply rounded-[14px] bg-surface border border-border;
+    @apply rounded-[14px] bg-surface border border-border
+      shadow-[0_1px_2px_#0000000a] transition;
   }
   .chip {
-    @apply inline-flex items-center gap-1 rounded-full bg-elevated
+    @apply inline-flex items-center gap-1 rounded-full bg-elevated border border-border
       px-2.5 py-1 text-xs text-fg-muted;
   }
 }
