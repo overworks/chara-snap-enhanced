@@ -11,7 +11,16 @@ import {
 } from "./png";
 import { emptyCard, fromParsed, toV2Envelope, toV3Envelope } from "./card";
 import { readCardFromPng } from "./io";
+import { zipSync, strToU8 } from "fflate";
 import { writeCharx, readCharx } from "./charx";
+import {
+  bytesToDataUrl,
+  isEmbededUri,
+  embededPath,
+  findMainIcon,
+  buildAssetPath,
+  parseDataUrl,
+} from "./assets";
 import { validateCard } from "./validate";
 import { estimateTokens } from "./tokens";
 
@@ -106,6 +115,147 @@ describe("CHARX round-trip", () => {
     expect(result.card.name).toBe("Sherlock");
     expect(result.card.nickname).toBe("Holmes");
     expect(result.assets["assets/icon/main.png"]).toEqual(asset);
+  });
+
+  it("round-trips an embedded asset reference and its bytes", () => {
+    const bytes = new Uint8Array([1, 2, 3]);
+    const path = "assets/background/images/bg.png";
+    const card = {
+      ...emptyCard(),
+      name: "X",
+      assets: [{ type: "background", uri: `embeded://${path}`, name: "bg", ext: "png" }],
+    };
+    const charx = writeCharx(card, 1, { [path]: bytes });
+    const { card: read, assets } = readCharx(charx);
+    expect(read.assets?.[0].uri).toBe(`embeded://${path}`);
+    expect(assets[path]).toEqual(bytes);
+  });
+
+  it("converts a data: URL asset into an embedded file", () => {
+    const png = new Uint8Array([9, 8, 7, 6]);
+    const card = {
+      ...emptyCard(),
+      name: "Data",
+      assets: [
+        { type: "emotion", uri: bytesToDataUrl(png, "image/png"), name: "smile", ext: "png" },
+      ],
+    };
+    const { card: read, assets } = readCharx(writeCharx(card, 1, {}));
+    const a = read.assets![0];
+    expect(isEmbededUri(a.uri)).toBe(true);
+    expect(assets[embededPath(a.uri)]).toEqual(png);
+  });
+
+  it("embeds the editor avatar as icon/main", () => {
+    const avatar = new Uint8Array([4, 4, 4, 4]);
+    const charx = writeCharx({ ...emptyCard(), name: "Ava" }, 1, {}, avatar);
+    const { card: read, assets } = readCharx(charx);
+    const main = findMainIcon(read.assets);
+    expect(main && isEmbededUri(main.uri)).toBe(true);
+    expect(assets[embededPath(main!.uri)]).toEqual(avatar);
+  });
+
+  it("preserves a custom asset type", () => {
+    const card = {
+      ...emptyCard(),
+      name: "C",
+      assets: [{ type: "x_live2d", uri: "ccdefault:", name: "model", ext: "unknown" }],
+    };
+    const { card: read } = readCharx(writeCharx(card, 1, {}));
+    expect(read.assets?.[0].type).toBe("x_live2d");
+  });
+});
+
+describe("CHARX lenient reading (non-conformant files)", () => {
+  const v3 = (data: object) => ({ spec: "chara_card_v3", spec_version: "3.0", data });
+  const makeCharx = (card: object, files: Record<string, Uint8Array>) =>
+    zipSync({ "card.json": strToU8(JSON.stringify(card)), ...files });
+
+  it("repairs a mismatched embeded:// folder via basename", () => {
+    const bytes = new Uint8Array([1, 2, 3]);
+    // URI says .../images/... but the file is stored under .../image/...
+    const charx = makeCharx(
+      v3({
+        name: "M",
+        assets: [
+          { type: "icon", uri: "embeded://assets/icon/images/main.png", name: "main", ext: "png" },
+        ],
+      }),
+      { "assets/icon/image/main.png": bytes },
+    );
+    const { card, assets } = readCharx(charx);
+    expect(card.assets?.[0].uri).toBe("embeded://assets/icon/image/main.png");
+    expect(assets[embededPath(card.assets![0].uri)]).toEqual(bytes);
+  });
+
+  it("resolves RisuAI's __asset: scheme", () => {
+    const bytes = new Uint8Array([4, 5]);
+    const charx = makeCharx(
+      v3({
+        name: "R",
+        assets: [
+          { type: "emotion", uri: "__asset:assets/emotion/smile.png", name: "smile", ext: "png" },
+        ],
+      }),
+      { "assets/emotion/smile.png": bytes },
+    );
+    const { card, assets } = readCharx(charx);
+    expect(isEmbededUri(card.assets![0].uri)).toBe(true);
+    expect(assets[embededPath(card.assets![0].uri)]).toEqual(bytes);
+  });
+
+  it("resolves a bare path and a URL-encoded path", () => {
+    const a = new Uint8Array([7]);
+    const b = new Uint8Array([8]);
+    const charx = makeCharx(
+      v3({
+        name: "B",
+        assets: [
+          { type: "background", uri: "assets/bg.png", name: "bg", ext: "png" },
+          { type: "icon", uri: "embeded://assets/icon/main%20icon.png", name: "main", ext: "png" },
+        ],
+      }),
+      { "assets/bg.png": a, "assets/icon/main icon.png": b },
+    );
+    const { card, assets } = readCharx(charx);
+    expect(assets[embededPath(card.assets![0].uri)]).toEqual(a);
+    expect(assets[embededPath(card.assets![1].uri)]).toEqual(b);
+  });
+
+  it("reads a nested card.json with a BOM and detects v3", () => {
+    const bom = "﻿" + JSON.stringify(v3({ name: "Nested" }));
+    const charx = zipSync({ "chara/card.json": strToU8(bom) });
+    const { card, detectedVersion } = readCharx(charx);
+    expect(card.name).toBe("Nested");
+    expect(detectedVersion).toBe("v3");
+  });
+
+  it("surfaces embedded images when the card lists no assets", () => {
+    const bytes = new Uint8Array([9, 9, 9]);
+    const charx = makeCharx(v3({ name: "NoAssets" }), { "assets/icon/main.png": bytes });
+    const { card, assets } = readCharx(charx);
+    const main = findMainIcon(card.assets);
+    expect(main?.name).toBe("main");
+    expect(assets[embededPath(main!.uri)]).toEqual(bytes);
+  });
+});
+
+describe("asset helpers", () => {
+  it("builds unique CHARX paths under the right category", () => {
+    const taken = new Set<string>();
+    expect(buildAssetPath("icon", "main", "png", taken)).toBe(
+      "assets/icon/images/main.png",
+    );
+    expect(buildAssetPath("icon", "main", "png", taken)).toBe(
+      "assets/icon/images/main_2.png",
+    );
+  });
+
+  it("decodes a base64 data URL back to bytes", () => {
+    const bytes = new Uint8Array([10, 20, 30, 40, 255]);
+    const decoded = parseDataUrl(bytesToDataUrl(bytes, "image/png"));
+    expect(decoded?.bytes).toEqual(bytes);
+    expect(decoded?.ext).toBe("png");
   });
 });
 
