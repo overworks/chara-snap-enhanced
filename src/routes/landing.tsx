@@ -9,10 +9,12 @@ import {
   Upload,
   ChevronDown,
   Info,
+  Github,
 } from "lucide-react";
 import { useCard } from "../state/CardContext";
 import { readCardFile, loadExampleCard } from "../lib/io";
 import { useI18n } from "../i18n";
+import { REPO_URL } from "../links";
 import HeaderControls from "../components/HeaderControls";
 
 const FEATURE_ICONS = [FileText, Lock, BookOpen, Download, Smartphone];
@@ -275,9 +277,19 @@ export default function LandingPage() {
             ))}
           </div>
           <div className="mt-6 flex items-center justify-between">
-            <Link to="/guide" className="text-sm text-accent-text hover:underline">
-              {d.landing.guideFooterLink}
-            </Link>
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+              <Link to="/guide" className="text-sm text-accent-text hover:underline">
+                {d.landing.guideFooterLink}
+              </Link>
+              <a
+                href={REPO_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-sm text-fg-muted transition hover:text-accent-text"
+              >
+                <Github size={14} /> {d.common.sourceCode}
+              </a>
+            </div>
             <HeaderControls className="sm:hidden" />
           </div>
         </div>

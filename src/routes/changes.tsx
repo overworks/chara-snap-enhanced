@@ -1,12 +1,13 @@
 import { Link } from "@tanstack/react-router";
-import { Info } from "lucide-react";
+import { Info, Github } from "lucide-react";
 import HeaderControls from "../components/HeaderControls";
 import { Rich } from "../components/Rich";
 import { useI18n } from "../i18n";
+import { REPO_URL } from "../links";
 import { changesEn, changesKo } from "../i18n/changes";
 
 export default function ChangesPage() {
-  const { locale } = useI18n();
+  const { locale, d } = useI18n();
   const c = locale === "ko" ? changesKo : changesEn;
 
   return (
@@ -34,9 +35,19 @@ export default function ChangesPage() {
         {/* Reconstruction reminder */}
         <div className="mt-8 flex gap-3 rounded-[12px] border border-warning/40 bg-warning/5 p-4">
           <Info size={18} className="mt-0.5 shrink-0 text-warning" />
-          <p className="text-sm leading-relaxed text-fg-muted">
-            <Rich text={c.originNote} />
-          </p>
+          <div className="space-y-2">
+            <p className="text-sm leading-relaxed text-fg-muted">
+              <Rich text={c.originNote} />
+            </p>
+            <a
+              href={REPO_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-accent-text hover:underline"
+            >
+              <Github size={15} /> {d.common.sourceCode}
+            </a>
+          </div>
         </div>
 
         {/* Differences */}

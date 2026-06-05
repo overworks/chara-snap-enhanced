@@ -10,6 +10,7 @@ export const en = {
     export: "Export",
     add: "Add",
     backHome: "Back to home",
+    sourceCode: "Source on GitHub",
   },
   theme: {
     label: "Theme",

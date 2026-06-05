@@ -10,6 +10,7 @@ export const ko: Dict = {
     export: "내보내기",
     add: "추가",
     backHome: "홈으로",
+    sourceCode: "GitHub 소스 저장소",
   },
   theme: {
     label: "테마",
