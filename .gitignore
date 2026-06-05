@@ -1,0 +1,8 @@
+node_modules/
+dist/
+*.local
+.DS_Store
+
+# Reverse-engineering scratch space (original bundle + captured assets).
+# Findings are distilled into SPEC.md; the raw bundle is not committed.
+_analysis/
