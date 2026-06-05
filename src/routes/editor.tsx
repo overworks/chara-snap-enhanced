@@ -71,17 +71,17 @@ export default function EditorPage() {
         {/* Main column */}
         <main className="flex min-w-0 flex-1 flex-col">
           {/* Tab bar */}
-          <nav className="flex shrink-0 gap-1 overflow-x-auto border-b border-border px-3">
+          <nav className="flex shrink-0 gap-1 overflow-x-auto border-b border-border px-3 py-1.5">
             {TABS.map((t) => {
               const on = t.id === active;
               return (
                 <button
                   key={t.id}
                   onClick={() => setActive(t.id)}
-                  className={`flex shrink-0 items-center gap-1.5 border-b-2 px-3 py-2.5 text-sm transition ${
+                  className={`flex shrink-0 items-center gap-1.5 rounded-[8px] px-3 py-1.5 text-sm font-medium transition ${
                     on
-                      ? "border-accent text-fg"
-                      : "border-transparent text-fg-faint hover:text-fg-muted"
+                      ? "bg-accent-subtle text-accent-text"
+                      : "text-fg-faint hover:bg-elevated hover:text-fg-muted"
                   }`}
                 >
                   <t.icon size={15} />

@@ -83,7 +83,7 @@ export default function LandingPage() {
   return (
     <div className="min-h-full">
       <header className="mx-auto flex max-w-5xl items-center justify-between px-5 py-5">
-        <div className="flex items-center gap-2 text-lg font-semibold">
+        <div className="flex items-center gap-2 font-display text-lg font-semibold tracking-tight">
           <span aria-hidden>🃏</span>
           <span>{d.common.appName}</span>
         </div>
@@ -100,7 +100,7 @@ export default function LandingPage() {
 
       {/* Hero */}
       <section className="mx-auto max-w-3xl px-5 pt-10 pb-6 text-center">
-        <h1 className="bg-gradient-to-b from-fg to-fg-faint bg-clip-text text-4xl font-bold tracking-tight text-transparent sm:text-5xl">
+        <h1 className="bg-gradient-to-b from-fg to-fg-faint bg-clip-text font-display text-4xl font-bold tracking-tight text-transparent sm:text-5xl">
           {d.common.appName}
         </h1>
         <p className="mt-4 text-balance text-lg text-fg-muted">{d.landing.tagline}</p>
@@ -160,7 +160,7 @@ export default function LandingPage() {
                 onClick={() => handleExample(ex.file, ex.name)}
                 className="group w-28 text-center"
               >
-                <div className="overflow-hidden rounded-[12px] border border-border transition group-hover:border-accent group-hover:shadow-[0_8px_24px_-8px_#6d5cffaa]">
+                <div className="overflow-hidden rounded-[12px] border border-border transition group-hover:border-accent group-hover:shadow-[0_8px_24px_-8px_#f4623aaa]">
                   <img
                     src={`${base}example-cards/${ex.file}`}
                     alt={ex.name}
@@ -179,7 +179,9 @@ export default function LandingPage() {
 
       {/* Features */}
       <section className="mx-auto max-w-5xl px-5 py-16">
-        <h2 className="text-center text-2xl font-bold">{d.landing.featuresHeading}</h2>
+        <h2 className="text-center font-display text-2xl font-bold tracking-tight">
+          {d.landing.featuresHeading}
+        </h2>
         <p className="mx-auto mt-2 max-w-xl text-center text-fg-muted">
           {d.landing.featuresSub}
         </p>
@@ -204,7 +206,9 @@ export default function LandingPage() {
 
       {/* FAQ */}
       <section className="mx-auto max-w-3xl px-5 py-8">
-        <h2 className="text-center text-2xl font-bold">{d.landing.faqHeading}</h2>
+        <h2 className="text-center font-display text-2xl font-bold tracking-tight">
+          {d.landing.faqHeading}
+        </h2>
         <div className="mt-8 space-y-3">
           {d.landing.faq.map((item, i) => (
             <details key={i} className="card-surface group px-5 py-4">
@@ -224,7 +228,9 @@ export default function LandingPage() {
       {/* Footer */}
       <footer className="mx-auto max-w-5xl px-5 py-16">
         <div className="card-surface p-6">
-          <h2 className="text-lg font-semibold">{d.landing.whatTitle}</h2>
+          <h2 className="font-display text-lg font-semibold tracking-tight">
+            {d.landing.whatTitle}
+          </h2>
           <p className="mt-2 max-w-3xl text-sm leading-relaxed text-fg-muted">
             {d.landing.whatBody}
           </p>

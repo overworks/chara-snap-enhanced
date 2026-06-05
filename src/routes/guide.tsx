@@ -50,7 +50,7 @@ const TIPS: [string, string][] = [
 
 function H({ id, children }: { id: string; children: React.ReactNode }) {
   return (
-    <h2 id={id} className="scroll-mt-20 text-2xl font-bold text-fg">
+    <h2 id={id} className="scroll-mt-20 font-display text-2xl font-bold tracking-tight text-fg">
       {children}
     </h2>
   );
@@ -74,7 +74,7 @@ export default function GuidePage() {
       </header>
 
       <article className="mx-auto max-w-3xl px-5 py-10 leading-relaxed text-fg-muted">
-        <h1 className="text-3xl font-bold text-fg">
+        <h1 className="font-display text-3xl font-bold tracking-tight text-fg">
           How to Create &amp; Edit SillyTavern Character Cards
         </h1>
         <p className="mt-3 text-fg-muted">
