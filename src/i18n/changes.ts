@@ -70,6 +70,32 @@ export const changesEn: ChangesContent = {
   logIntro: "Newest first. New features land here as they're built.",
   log: [
     {
+      date: "2026-06-17",
+      title: "Translate greetings",
+      items: [
+        "Translate the first message or any alternate greeting into a new alternate greeting, right from the Messages tab.",
+        "Pick a target language (your choice is remembered); the source language is auto-detected. Translates with Google Cloud Translation or an AI model, per your Settings.",
+        "For AI translation, optionally add a custom prompt in Settings to steer tone, formality, or how names and terms are handled.",
+      ],
+    },
+    {
+      date: "2026-06-17",
+      title: "Settings page",
+      items: [
+        "Added a Settings page for translation and appearance preferences.",
+        "Translation via Google Cloud Translation or an AI model (LLM) — both work directly in the browser, each with a Test connection check.",
+        "Your API key is stored only in this browser's local storage and sent only to the service you configure.",
+        "Appearance (theme) and language controls now also live on the Settings page.",
+      ],
+    },
+    {
+      date: "2026-06-17",
+      title: "Unified navigation",
+      items: [
+        "Every page now shares one top bar — brand, Guide, Settings, theme and language, and Open Editor — with the current page highlighted.",
+      ],
+    },
+    {
       date: "2026-06-06",
       title: "Read image-wrapped CHARX files",
       items: [
@@ -142,6 +168,32 @@ export const changesKo: ChangesContent = {
   logTitle: "변경 노트",
   logIntro: "최신순입니다. 새 기능이 만들어질 때마다 여기에 기록됩니다.",
   log: [
+    {
+      date: "2026-06-17",
+      title: "인사말 번역",
+      items: [
+        "메시지 탭에서 첫 메시지나 대체 인사말을 번역해 새 대체 인사말로 바로 추가할 수 있습니다.",
+        "대상 언어를 고르면(선택은 기억됩니다) 출발 언어는 자동 감지됩니다. 설정에 따라 Google Cloud Translation 또는 AI 모델로 번역합니다.",
+        "AI 번역의 경우, 설정에서 커스텀 프롬프트를 추가해 말투·격식·이름/용어 처리 방식을 조정할 수 있습니다.",
+      ],
+    },
+    {
+      date: "2026-06-17",
+      title: "설정 페이지",
+      items: [
+        "번역과 화면 환경설정을 위한 설정 페이지를 추가했습니다.",
+        "Google Cloud Translation 또는 AI 모델(LLM)로 번역하며 — 둘 다 브라우저에서 바로 동작합니다 — 각각 연결 테스트를 제공합니다.",
+        "API 키는 이 브라우저의 로컬 스토리지에만 저장되고 설정한 서비스로만 전송됩니다.",
+        "화면(테마)과 언어 설정도 이제 설정 페이지에 모였습니다.",
+      ],
+    },
+    {
+      date: "2026-06-17",
+      title: "통합 내비게이션",
+      items: [
+        "이제 모든 페이지가 하나의 상단 바를 공유합니다 — 브랜드, 가이드, 설정, 테마·언어, 에디터 열기 — 현재 페이지가 강조 표시됩니다.",
+      ],
+    },
     {
       date: "2026-06-06",
       title: "이미지로 감싼 CHARX 읽기",

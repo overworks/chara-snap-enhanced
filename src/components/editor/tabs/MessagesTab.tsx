@@ -1,15 +1,81 @@
 import { useState } from "react";
-import { Plus, X, ChevronDown, ChevronUp, GripVertical } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import {
+  Plus,
+  X,
+  ChevronDown,
+  ChevronUp,
+  GripVertical,
+  Languages,
+  Loader2,
+} from "lucide-react";
 import { useCard } from "../../../state/CardContext";
+import { useSettings } from "../../../state/SettingsContext";
 import { useI18n } from "../../../i18n";
 import { TextArea, Field, InfoLabel } from "../../fields";
+import {
+  translate,
+  translateLlm,
+  getTarget,
+  TranslateError,
+  TRANSLATION_TARGETS,
+} from "../../../lib/translate";
+import { getProvider } from "../../../lib/providers";
 
 export default function MessagesTab() {
   const { state, updateCard, mutateCard } = useCard();
+  const { ai, translation, setTranslation } = useSettings();
   const { d, t } = useI18n();
+  const tr = d.messages.translate;
   const { card } = state;
   const greetings = card.alternate_greetings;
   const groupGreetings = card.group_only_greetings ?? [];
+
+  // Translation: a single in-flight source id disables all translate buttons.
+  const [busy, setBusy] = useState<string | null>(null);
+  const [trError, setTrError] = useState<string | null>(null);
+
+  // The LLM engine uses the AI config (and its own key); others use their key.
+  const usingLlm = translation.provider === "llm";
+  const hasTranslationKey = usingLlm
+    ? !getProvider(ai.provider).needsKey || ai.apiKey.trim() !== ""
+    : translation.apiKey.trim() !== "";
+
+  async function translateInto(sourceId: string, sourceText: string) {
+    setTrError(null);
+    const text = sourceText.trim();
+    if (!text) return setTrError(tr.errNoText);
+    if (!hasTranslationKey) return setTrError(tr.errNoKey);
+    setBusy(sourceId);
+    try {
+      const result = usingLlm
+        ? await translateLlm(text, getTarget(translation.targetLang).label, {
+            provider: ai.provider,
+            baseUrl: ai.baseUrl,
+            apiKey: ai.apiKey,
+            model: ai.model,
+            prompt: translation.llmPrompt,
+          })
+        : await translate(
+            text,
+            translation.targetLang,
+            translation.provider,
+            translation.apiKey,
+          );
+      mutateCard((c) => ({
+        ...c,
+        alternate_greetings: [...c.alternate_greetings, result],
+      }));
+    } catch (e) {
+      setTrError(
+        e instanceof TranslateError && e.status
+          ? t(tr.errHttp, { status: e.status })
+          : tr.errNetwork,
+      );
+    } finally {
+      setBusy(null);
+    }
+  }
 
   const setGreeting = (i: number, v: string) =>
     updateCard({
@@ -43,14 +109,60 @@ export default function MessagesTab() {
 
   return (
     <div className="space-y-6">
-      <TextArea
-        label={d.messages.first}
-        tooltip={d.messages.firstTip}
-        value={card.first_mes}
-        onChange={(v) => updateCard({ first_mes: v })}
-        placeholder={d.messages.firstPlaceholder}
-        rows={8}
-      />
+      {/* Translation toolbar — applies to every translate action in this tab. */}
+      <div className="card-surface flex flex-wrap items-center gap-3 p-3">
+        <span className="inline-flex items-center gap-1.5 text-sm font-medium text-fg">
+          <Languages size={15} /> {tr.into}
+        </span>
+        <select
+          className="input h-9 w-auto"
+          value={translation.targetLang}
+          onChange={(e) => setTranslation({ targetLang: e.target.value })}
+        >
+          {TRANSLATION_TARGETS.map((target) => (
+            <option key={target.google} value={target.google}>
+              {target.label}
+            </option>
+          ))}
+        </select>
+        {busy && <Loader2 size={15} className="animate-spin text-fg-muted" />}
+        {trError && <span className="text-sm text-error">{trError}</span>}
+        {!hasTranslationKey && (
+          <Link
+            to="/settings"
+            className="ml-auto text-sm text-accent-text hover:underline"
+          >
+            {tr.configure}
+          </Link>
+        )}
+      </div>
+
+      <div className="space-y-2">
+        <TextArea
+          label={d.messages.first}
+          tooltip={d.messages.firstTip}
+          value={card.first_mes}
+          onChange={(v) => updateCard({ first_mes: v })}
+          placeholder={d.messages.firstPlaceholder}
+          rows={8}
+        />
+        <button
+          type="button"
+          onClick={() => translateInto("first", card.first_mes)}
+          disabled={busy !== null}
+          className="btn-secondary text-sm disabled:opacity-60"
+        >
+          {busy === "first" ? (
+            <span className="inline-flex items-center gap-1.5">
+              <Loader2 size={14} className="animate-spin" /> {tr.translating}
+            </span>
+          ) : (
+            <>
+              <Languages size={14} /> {tr.toNewGreeting}
+            </>
+          )}
+        </button>
+      </div>
 
       <Field
         label={d.messages.altGreetings}
@@ -67,6 +179,10 @@ export default function MessagesTab() {
               onChange={(v) => setGreeting(i, v)}
               onRemove={() => removeGreeting(i)}
               onMove={(dir) => moveGreeting(i, dir)}
+              onTranslate={() => translateInto(`g${i}`, g)}
+              translating={busy === `g${i}`}
+              translateBusy={busy !== null}
+              translateTitle={tr.toNewGreeting}
               placeholder={d.messages.greetingPlaceholder}
               label={t(d.messages.greeting, { n: i + 1 })}
             />
@@ -135,6 +251,10 @@ function GreetingCard({
   onChange,
   onRemove,
   onMove,
+  onTranslate,
+  translating,
+  translateBusy,
+  translateTitle,
 }: {
   index: number;
   value: string;
@@ -144,6 +264,10 @@ function GreetingCard({
   onChange: (v: string) => void;
   onRemove: () => void;
   onMove: (dir: -1 | 1) => void;
+  onTranslate: () => void;
+  translating: boolean;
+  translateBusy: boolean;
+  translateTitle: string;
 }) {
   const [open, setOpen] = useState(true);
   return (
@@ -180,6 +304,20 @@ function GreetingCard({
             <span className="ml-2 font-normal text-fg-faint">
               {value.slice(0, 48)}…
             </span>
+          )}
+        </button>
+        <button
+          type="button"
+          onClick={onTranslate}
+          disabled={translateBusy}
+          className="btn-ghost px-2 disabled:opacity-40"
+          aria-label={translateTitle}
+          title={translateTitle}
+        >
+          {translating ? (
+            <Loader2 size={15} className="animate-spin" />
+          ) : (
+            <Languages size={15} />
           )}
         </button>
         <button
