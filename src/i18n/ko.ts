@@ -5,6 +5,7 @@ export const ko: Dict = {
   common: {
     appName: "Chara Studio",
     guide: "가이드",
+    settings: "설정",
     openEditor: "에디터 열기",
     createNew: "새로 만들기",
     export: "내보내기",
@@ -20,6 +21,64 @@ export const ko: Dict = {
   },
   language: {
     label: "언어",
+  },
+  settings: {
+    back: "← Chara Studio로 돌아가기",
+    openEditor: "에디터 열기",
+    title: "설정",
+    subtitle:
+      "번역과 화면 환경설정을 구성합니다. 모든 설정은 이 브라우저에만 저장됩니다.",
+    aiHeading: "AI 생성",
+    aiIntro:
+      "제공자 프리셋을 고르거나 OpenAI 호환 엔드포인트를 직접 지정하세요. 카드 내용을 AI로 작성하는 데 사용됩니다.",
+    provider: "제공자",
+    providerCustom: "직접 입력",
+    getKey: "{provider} API 키 발급받기",
+    corsNote:
+      "{provider}은(는) 브라우저 직접 요청(CORS)을 허용하지 않으므로 여기서는 연결 테스트와 실제 호출이 실패합니다. CORS를 허용하는 프록시가 필요합니다 — AI의 경우 브라우저 접근을 허용하는 제공자(Claude, Gemini, OpenRouter, 또는 로컬 Ollama)를 쓸 수도 있습니다.",
+    apiKeyOptional: "선택 사항 — Ollama 같은 로컬 제공자는 키가 필요 없습니다.",
+    baseUrl: "Base URL",
+    baseUrlHint: "/v1로 끝나는 OpenAI 호환 API 루트 주소입니다.",
+    baseUrlPlaceholder: "https://api.openai.com/v1",
+    apiKey: "API 키",
+    apiKeyHint: "위 엔드포인트로만 전송되며, 다른 곳으로는 절대 업로드되지 않습니다.",
+    apiKeyPlaceholder: "sk-…",
+    show: "표시",
+    hide: "숨기기",
+    model: "모델",
+    modelHint: "요청할 모델 id입니다. 예: gpt-4o-mini.",
+    modelPlaceholder: "gpt-4o-mini",
+    securityNote:
+      "키는 이 브라우저의 로컬 스토리지에 평문으로 저장됩니다. 신뢰할 수 있는 기기에서만 사용하고, 이 브라우저에 접근할 수 있는 사람은 키를 읽을 수 있다는 점에 유의하세요.",
+    test: "연결 테스트",
+    testing: "테스트 중…",
+    testOk: "연결됨 — 엔드포인트가 응답했습니다.",
+    testFailHttp: "엔드포인트가 HTTP {status}을(를) 반환했습니다.",
+    testFailNetwork:
+      "엔드포인트에 연결할 수 없습니다. 브라우저 직접 접근(CORS)을 차단하거나 URL이 잘못되었을 수 있습니다.",
+    testNoKey: "먼저 Base URL과 API 키를 입력하세요.",
+    translationHeading: "번역",
+    translationIntro:
+      "Google Cloud Translation 또는 AI 모델로 카드 필드를 번역합니다. 키는 이 브라우저에만 저장됩니다.",
+    translator: "서비스",
+    llmHint:
+      "번역은 아래 AI 제공자를 통해 실행됩니다. 브라우저에서는 직접 접근을 허용하는 제공자(Claude, Gemini, OpenRouter, 또는 로컬 Ollama)를 고르세요.",
+    llmPrompt: "번역 프롬프트 (선택)",
+    llmPromptHint:
+      "모든 AI 번역에 추가되는 지시사항입니다 — 예: 말투, 격식, 이름·용어 처리 방식.",
+    llmPromptPlaceholder:
+      "친근하고 장난스러운 말투를 유지하세요. 고유명사는 번역하지 마세요.",
+    translatorKey: "{provider} API 키",
+    googleKeyHint:
+      "Google Cloud에서 Cloud Translation API를 활성화한 API 키를 만드세요.",
+    deeplKeyHint: "무료 키는 ':fx'로 끝나며 자동으로 인식됩니다.",
+    deeplFree: "무료(Free) API 키로 인식됨 (api-free.deepl.com).",
+    deeplPro: "Pro API 키로 인식됨 (api.deepl.com).",
+    appearanceHeading: "화면",
+    appearanceTheme: "테마",
+    languageHeading: "언어",
+    backHome: "← 홈으로 돌아가기",
+    openEditorCta: "에디터 열기 →",
   },
   landing: {
     tagline: "AI 롤플레이 플랫폼용 캐릭터 카드를 만들고, 편집하고, 내보내세요.",
@@ -176,6 +235,17 @@ export const ko: Dict = {
     examples: "예시 메시지",
     examplesTip: "AI를 안내하는 예시 대화. <START>로 예시를 구분하세요.",
     examplesHint: "AI를 안내하는 예시 대화. <START>로 예시를 구분하세요.",
+    translate: {
+      into: "번역 대상",
+      toNewGreeting: "번역 → 새 인사말",
+      translating: "번역 중…",
+      errNoText: "번역할 내용이 없습니다.",
+      errNoKey: "먼저 설정에서 번역 API 키를 추가하세요.",
+      errHttp: "번역 실패 (HTTP {status}).",
+      errNetwork:
+        "번역에 실패했습니다 — 서비스가 브라우저 접근(CORS)을 차단하거나 키가 잘못되었을 수 있습니다.",
+      configure: "설정 열기",
+    },
   },
   prompts: {
     system: "시스템 프롬프트",

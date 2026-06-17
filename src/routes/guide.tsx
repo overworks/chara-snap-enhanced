@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import HeaderControls from "../components/HeaderControls";
+import SiteHeader from "../components/SiteHeader";
 import { Rich } from "../components/Rich";
 import { useI18n } from "../i18n";
 import { guideEn, guideKo } from "../i18n/guide";
@@ -29,19 +29,7 @@ export default function GuidePage() {
 
   return (
     <div className="min-h-full">
-      <header className="sticky top-0 z-20 border-b border-border bg-bg/80 backdrop-blur">
-        <div className="mx-auto flex max-w-3xl items-center justify-between px-5 py-3">
-          <Link to="/" className="text-sm text-fg-muted hover:text-fg">
-            {g.back}
-          </Link>
-          <div className="flex items-center gap-2">
-            <HeaderControls className="hidden sm:flex" />
-            <Link to="/editor" className="btn-secondary">
-              {g.openEditor}
-            </Link>
-          </div>
-        </div>
-      </header>
+      <SiteHeader />
 
       <article className="mx-auto max-w-3xl px-5 py-10 leading-relaxed text-fg-muted">
         <h1 className="font-display text-3xl font-bold tracking-tight text-fg">

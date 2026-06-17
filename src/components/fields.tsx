@@ -1,5 +1,5 @@
 import { useState, type ReactNode, type TextareaHTMLAttributes } from "react";
-import { HelpCircle } from "lucide-react";
+import { HelpCircle, Eye, EyeOff } from "lucide-react";
 
 export function InfoLabel({
   label,
@@ -90,6 +90,51 @@ export function TextInput({
         placeholder={placeholder}
         onChange={(e) => onChange(e.target.value)}
       />
+    </Field>
+  );
+}
+
+/** A masked secret field (API keys) with an inline show/hide toggle. */
+export function SecretInput({
+  label,
+  tooltip,
+  hint,
+  value,
+  onChange,
+  placeholder,
+  showLabel,
+  hideLabel,
+}: {
+  label?: string;
+  tooltip?: string;
+  hint?: string;
+  value: string;
+  onChange: (v: string) => void;
+  placeholder?: string;
+  showLabel: string;
+  hideLabel: string;
+}) {
+  const [show, setShow] = useState(false);
+  return (
+    <Field label={label} tooltip={tooltip} hint={hint}>
+      <div className="relative">
+        <input
+          type={show ? "text" : "password"}
+          className="input pr-16"
+          value={value}
+          placeholder={placeholder}
+          onChange={(e) => onChange(e.target.value)}
+        />
+        <button
+          type="button"
+          onClick={() => setShow((v) => !v)}
+          aria-label={show ? hideLabel : showLabel}
+          className="absolute right-1.5 top-1/2 inline-flex h-7 -translate-y-1/2 items-center gap-1 rounded-[7px] px-2 text-xs text-fg-faint transition hover:bg-elevated hover:text-fg"
+        >
+          {show ? <EyeOff size={13} /> : <Eye size={13} />}
+          {show ? hideLabel : showLabel}
+        </button>
+      </div>
     </Field>
   );
 }

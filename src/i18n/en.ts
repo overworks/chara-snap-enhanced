@@ -5,6 +5,7 @@ export const en = {
   common: {
     appName: "Chara Studio",
     guide: "Guide",
+    settings: "Settings",
     openEditor: "Open Editor",
     createNew: "Create New",
     export: "Export",
@@ -20,6 +21,64 @@ export const en = {
   },
   language: {
     label: "Language",
+  },
+  settings: {
+    back: "← Back to Chara Studio",
+    openEditor: "Open Editor",
+    title: "Settings",
+    subtitle:
+      "Configure translation and your appearance preferences. Everything is stored only in this browser.",
+    aiHeading: "AI generation",
+    aiIntro:
+      "Pick a provider preset or point at any OpenAI-compatible endpoint. Used to draft card content with AI.",
+    provider: "Provider",
+    providerCustom: "Custom",
+    getKey: "Get a {provider} API key",
+    corsNote:
+      "{provider} doesn't allow direct browser requests (CORS), so Test connection and live calls will fail from here. You'd need a CORS-friendly proxy — or, for AI, a provider that supports browser access (Claude, Gemini, OpenRouter, or a local Ollama).",
+    apiKeyOptional: "Optional — a local provider like Ollama needs no key.",
+    baseUrl: "Base URL",
+    baseUrlHint: "The OpenAI-compatible API root, ending in /v1.",
+    baseUrlPlaceholder: "https://api.openai.com/v1",
+    apiKey: "API key",
+    apiKeyHint: "Sent only to the endpoint above. Never uploaded anywhere else.",
+    apiKeyPlaceholder: "sk-…",
+    show: "Show",
+    hide: "Hide",
+    model: "Model",
+    modelHint: "The model id to request, e.g. gpt-4o-mini.",
+    modelPlaceholder: "gpt-4o-mini",
+    securityNote:
+      "Your key is saved in this browser's local storage in plain text. Only use this on a device you trust, and remember anyone with access to this browser can read it.",
+    test: "Test connection",
+    testing: "Testing…",
+    testOk: "Connected — the endpoint responded.",
+    testFailHttp: "The endpoint returned HTTP {status}.",
+    testFailNetwork:
+      "Couldn't reach the endpoint. It may block direct browser access (CORS), or the URL is wrong.",
+    testNoKey: "Enter a base URL and API key first.",
+    translationHeading: "Translation",
+    translationIntro:
+      "Translate card fields with Google Cloud Translation or an AI model. Your key is stored only in this browser.",
+    translator: "Service",
+    llmHint:
+      "Translation runs through your AI provider below. For browser use, pick one that allows direct access (Claude, Gemini, OpenRouter, or a local Ollama).",
+    llmPrompt: "Translation prompt (optional)",
+    llmPromptHint:
+      "Extra instructions added to every AI translation — e.g. tone, formality, or how to handle names and terms.",
+    llmPromptPlaceholder:
+      "Keep an informal, playful tone. Leave proper nouns untranslated.",
+    translatorKey: "{provider} API key",
+    googleKeyHint:
+      "Create an API key in Google Cloud with the Cloud Translation API enabled.",
+    deeplKeyHint: "Free keys end in ':fx' and are detected automatically.",
+    deeplFree: "Detected a Free API key (api-free.deepl.com).",
+    deeplPro: "Detected a Pro API key (api.deepl.com).",
+    appearanceHeading: "Appearance",
+    appearanceTheme: "Theme",
+    languageHeading: "Language",
+    backHome: "← Back to home",
+    openEditorCta: "Open the Editor →",
   },
   landing: {
     tagline: "Create, edit, and export character cards for AI roleplay platforms.",
@@ -177,6 +236,17 @@ export const en = {
     examples: "Message Examples",
     examplesTip: "Example conversations to guide the AI. Use <START> to separate examples.",
     examplesHint: "Example conversations to guide the AI. Use <START> to separate examples.",
+    translate: {
+      into: "Translate into",
+      toNewGreeting: "Translate → new greeting",
+      translating: "Translating…",
+      errNoText: "Nothing to translate yet.",
+      errNoKey: "Add a translation API key in Settings first.",
+      errHttp: "Translation failed (HTTP {status}).",
+      errNetwork:
+        "Translation failed — the service may block browser access (CORS), or the key is wrong.",
+      configure: "Open Settings",
+    },
   },
   prompts: {
     system: "System Prompt",

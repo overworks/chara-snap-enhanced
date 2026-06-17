@@ -16,6 +16,7 @@ import { readCardFile, readCardFromUrl, loadExampleCard } from "../lib/io";
 import { useI18n } from "../i18n";
 import { REPO_URL } from "../links";
 import HeaderControls from "../components/HeaderControls";
+import SiteHeader from "../components/SiteHeader";
 
 const FEATURE_ICONS = [FileText, Lock, BookOpen, Download, Smartphone];
 
@@ -102,21 +103,7 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-full">
-      <header className="mx-auto flex max-w-5xl items-center justify-between px-5 py-5">
-        <div className="flex items-center gap-2 font-display text-lg font-semibold tracking-tight">
-          <span aria-hidden>🃏</span>
-          <span>{d.common.appName}</span>
-        </div>
-        <nav className="flex items-center gap-2 text-sm">
-          <HeaderControls className="hidden sm:flex" />
-          <Link to="/guide" className="btn-ghost">
-            {d.common.guide}
-          </Link>
-          <Link to="/editor" className="btn-secondary">
-            {d.common.openEditor}
-          </Link>
-        </nav>
-      </header>
+      <SiteHeader wide sticky={false} />
 
       {/* Hero */}
       <section className="mx-auto max-w-3xl px-5 pt-10 pb-6 text-center">

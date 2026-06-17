@@ -11,6 +11,7 @@ import {
   Image as ImageIcon,
   Code2,
   User,
+  Settings,
 } from "lucide-react";
 import { useCard } from "../state/CardContext";
 import { useI18n } from "../i18n";
@@ -55,6 +56,14 @@ export default function EditorPage() {
           {state.card.name || d.editor.untitled}
         </span>
         <HeaderControls className="hidden md:flex" />
+        <Link
+          to="/settings"
+          className="btn-ghost px-2"
+          aria-label={d.common.settings}
+          title={d.common.settings}
+        >
+          <Settings size={18} />
+        </Link>
         <button
           onClick={() => setProfileOpen((v) => !v)}
           className="btn-ghost px-2 lg:hidden"
